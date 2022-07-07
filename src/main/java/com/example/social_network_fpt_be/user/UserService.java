@@ -1,2 +1,4 @@
-package com.example.social_network_fpt_be.user;public class userService {
+package com.example.social_network_fpt_be.user;
+
+public class UserService {
 }
