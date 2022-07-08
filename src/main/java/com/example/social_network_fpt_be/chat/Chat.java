@@ -1,4 +1,4 @@
-package com.example.social_network_fpt_be.post;
+package com.example.social_network_fpt_be.chat;
 
-public class post {
+public class Chat {
 }
