@@ -27,13 +27,18 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
 
+    @GetMapping("{id}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(userService.getUserById(id));
+    }
+
     @GetMapping("")
-    public ResponseEntity<List<User>> getUsers() {
+    public ResponseEntity<List<UserDto>> getUsers() {
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
     @PostMapping("register")
-    public ResponseEntity<User> saveUser(@Valid @RequestBody AuthUserDto user) {
+    public ResponseEntity<UserDto> saveUser(@Valid @RequestBody AuthUserDto user) {
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(user.getPassword());
@@ -52,7 +57,7 @@ public class UserController {
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refresh_token);
                 String username = decodedJWT.getSubject();
-                User user = userService.getUserByUsername(username);
+                UserDto user = userService.getUserByUsername(username);
                 String accessToken = JWT.create()
                         .withSubject(user.getUsername())
                         .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 10 * 60))

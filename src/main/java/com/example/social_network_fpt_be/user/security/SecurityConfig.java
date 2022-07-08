@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -37,16 +38,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/v1/users/refresh-token/**").permitAll();
         http.authorizeRequests().antMatchers("/api/v1/users/register/**").permitAll();
-        http.authorizeRequests().antMatchers("/api/v1/users/**").hasAnyAuthority("0");
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/admin/**").hasAnyAuthority("1");
-        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/admin/**").hasAnyAuthority("1");
-        http.authorizeRequests().anyRequest().authenticated();
+        http.authorizeRequests().antMatchers("/api/v1/admin/**").hasAuthority("1");
+        http.authorizeRequests().antMatchers("/api/v1/users/**").hasAuthority("0");
+        http.authorizeRequests().anyRequest().permitAll();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
-    @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }

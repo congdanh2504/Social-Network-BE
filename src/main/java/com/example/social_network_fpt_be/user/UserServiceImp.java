@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,24 +26,28 @@ public class UserServiceImp implements UserService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User saveUser(User user) {
+    public UserDto saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return UserDto.toUserDto(savedUser);
     }
 
     @Override
-    public Optional<User> getUser(Long id) {
-        return userRepository.findById(id);
+    public List<UserDto> getUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream().map(UserDto::toUserDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    public UserDto getUserByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        return UserDto.toUserDto(user);
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public UserDto getUserById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return UserDto.toUserDto(user.get());
     }
 
     @Override

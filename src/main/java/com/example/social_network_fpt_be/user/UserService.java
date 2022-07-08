@@ -7,11 +7,11 @@ import java.util.Optional;
 
 @Service
 public interface UserService {
-    User saveUser(User user);
+    UserDto saveUser(User user);
 
-    Optional<User> getUser(Long id);
+    List<UserDto> getUsers();
 
-    List<User> getUsers();
+    UserDto getUserByUsername(String username);
 
-    User getUserByUsername(String username);
+    UserDto getUserById(Long id);
 }
