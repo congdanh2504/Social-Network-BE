@@ -35,12 +35,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         customAuthenticationFilter.setFilterProcessesUrl("/api/v1/users/login");
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/api/v1/users/refresh-token/**").permitAll();
-        http.authorizeRequests().antMatchers("/api/v1/users/register/**").permitAll();
-        http.authorizeRequests().antMatchers("/api/v1/users/**").hasAnyAuthority("0");
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/admin/**").hasAnyAuthority("1");
-        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/admin/**").hasAnyAuthority("1");
-        http.authorizeRequests().anyRequest().authenticated();
+//        http.authorizeRequests().antMatchers("/api/v1/users/refresh-token/**").permitAll();
+//        http.authorizeRequests().antMatchers("/api/v1/users/register/**").permitAll();
+//        http.authorizeRequests().antMatchers("/api/v1/users/**").hasAnyAuthority("0");
+//        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/admin/**").hasAnyAuthority("1");
+//        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/admin/**").hasAnyAuthority("1");
+        http.authorizeRequests().anyRequest().permitAll();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
