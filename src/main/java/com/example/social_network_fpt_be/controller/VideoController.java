@@ -1,6 +1,7 @@
-package com.example.social_network_fpt_be.cloudStorage.video;
+package com.example.social_network_fpt_be.controller;
 
-import org.json.JSONObject;
+import com.example.social_network_fpt_be.model.Video;
+import com.example.social_network_fpt_be.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +12,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.social_network_fpt_be.cloudStorage.setting.MAX_SIZE;
+import static com.example.social_network_fpt_be.config.Setting.MAX_SIZE;
 
 @RestController
-@RequestMapping(path = "/api/v1/video/")
+@RequestMapping(path = "/api/v1/video")
 public class VideoController {
 
     @Autowired
@@ -25,7 +26,7 @@ public class VideoController {
         return ResponseEntity.status(HttpStatus.OK).body(videoService.getVideoList());
     }
 
-    @GetMapping(path = "{id_video}")
+    @GetMapping(path = "/{id_video}")
     public ResponseEntity<Video> getVideoById(@PathVariable Long id_video) {
         return ResponseEntity.status(HttpStatus.OK).body(videoService.getVideoById(id_video));
     }
@@ -46,7 +47,7 @@ public class VideoController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
 
-    @PutMapping(path = "{id_video}")
+    @PutMapping(path = "/{id_video}")
     public ResponseEntity<Object> updateVideo(@PathVariable Long id_video,
                               @RequestPart("videoFile") MultipartFile videoFile) throws IOException {
         String result;
@@ -62,7 +63,7 @@ public class VideoController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
 
-    @DeleteMapping(path = "{id_video}")
+    @DeleteMapping(path = "/{id_video}")
     public ResponseEntity<String> deleteVideo(@PathVariable Long id_video) {
         String result = videoService.deleteVideo(id_video);
         if (result.equals("success")) {

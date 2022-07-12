@@ -1,4 +1,4 @@
-package com.example.social_network_fpt_be.cloudStorage.image;
+package com.example.social_network_fpt_be.model;
 
 
 import javax.persistence.*;

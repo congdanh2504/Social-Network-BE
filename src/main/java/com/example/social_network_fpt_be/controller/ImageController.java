@@ -1,7 +1,8 @@
-package com.example.social_network_fpt_be.cloudStorage.image;
+package com.example.social_network_fpt_be.controller;
 
 
-import org.json.JSONObject;
+import com.example.social_network_fpt_be.model.Image;
+import com.example.social_network_fpt_be.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +13,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.social_network_fpt_be.cloudStorage.setting.MAX_SIZE;
+import static com.example.social_network_fpt_be.config.Setting.MAX_SIZE;
 
 @RestController
-@RequestMapping(path = "/api/v1/image/")
-public class imageController {
+@RequestMapping(path = "/api/v1/image")
+public class ImageController {
 
     @Autowired
     private ImageService imageService;
@@ -26,7 +27,7 @@ public class imageController {
         return ResponseEntity.status(HttpStatus.OK).body(imageService.getImageList());
     }
 
-    @GetMapping(path = "{id_image}")
+    @GetMapping(path = "/{id_image}")
     public ResponseEntity<Image> getImageById(@PathVariable Long id_image) {
         return ResponseEntity.status(HttpStatus.OK).body(imageService.getImageById(id_image));
     }
@@ -51,7 +52,7 @@ public class imageController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
 
-    @PutMapping(path = "{id_image}")
+    @PutMapping(path = "/{id_image}")
     public ResponseEntity<Object> updateImage(@PathVariable Long id_image,
                              @RequestPart("imageFile") MultipartFile imageFile,
                              @RequestParam("type") String type,
@@ -71,7 +72,7 @@ public class imageController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
 
-    @DeleteMapping(path = "{id_image}")
+    @DeleteMapping(path = "/{id_image}")
     public ResponseEntity<String> deleteImage(@PathVariable Long id_image) {
         String result = imageService.deleteImage(id_image);
         if (result.equals("success")) {

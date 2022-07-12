@@ -1,6 +1,7 @@
-package com.example.social_network_fpt_be.cloudStorage.video;
+package com.example.social_network_fpt_be.service;
 
-import com.example.social_network_fpt_be.cloudStorage.connectFirebase;
+import com.example.social_network_fpt_be.model.Video;
+import com.example.social_network_fpt_be.repository.VideoRepository;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,9 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
-import static com.example.social_network_fpt_be.cloudStorage.setting.*;
+import static com.example.social_network_fpt_be.config.Setting.*;
 
 @Service
 @Transactional
