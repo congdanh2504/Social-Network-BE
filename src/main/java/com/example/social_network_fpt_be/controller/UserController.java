@@ -33,6 +33,11 @@ public class UserController {
     private final UserService userService;
     private final Environment env;
 
+    @GetMapping("profile")
+    public ResponseEntity<UserDto> getUserById(Authentication authentication) {
+        return ResponseEntity.ok().body(UserDto.toUserDto(userService.getUserByUsername(authentication.getName())));
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok().body(UserDto.toUserDto(userService.getUserById(id)));
