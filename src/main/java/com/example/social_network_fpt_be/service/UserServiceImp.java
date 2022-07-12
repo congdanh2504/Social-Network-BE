@@ -4,6 +4,7 @@ package com.example.social_network_fpt_be.service;
 import com.example.social_network_fpt_be.DTO.UserDto;
 import com.example.social_network_fpt_be.model.User;
 import com.example.social_network_fpt_be.repository.UserRepository;
+import com.google.api.client.util.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,10 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.text.Normalizer;
+import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,6 +53,22 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Override
     public User updateUser(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    public List<User> searchByUsername(String name) {
+        String[] words = name.split(" ");
+        Set<User> distinctUsers = new HashSet<>();
+        Arrays.stream(words).forEach((word) -> {
+            distinctUsers.addAll(userRepository.searchByUsername(removeAccent(word)));
+        });
+        return Lists.newArrayList(distinctUsers);
+    }
+
+    private String removeAccent(String s) {
+        String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(temp).replaceAll("");
     }
 
     @Override
