@@ -28,7 +28,7 @@
     - username
     - password
 - [GET] `/api/v1/users` 
-- [PUT] `/api/v1/users` 
+- [PUT] `/api/v1/users` (Authorization Bearer access token) 
     - firstName
     - lastName
     - phone
