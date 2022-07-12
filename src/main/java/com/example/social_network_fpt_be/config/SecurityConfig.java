@@ -33,9 +33,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean(), env);
         customAuthenticationFilter.setFilterProcessesUrl("/api/v1/users/login");
-        http.csrf().disable()  ;
-//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//        http.authorizeRequests().antMatchers("/api/v1/users").permitAll();
+        http.csrf().disable();
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.authorizeRequests().antMatchers("/api/v1/users/profile").hasAuthority("0");
 //        http.authorizeRequests().antMatchers("/api/v1/users/refresh-token/**").permitAll();
 //        http.authorizeRequests().antMatchers("/api/v1/users/register/**").permitAll();
 //        http.authorizeRequests().antMatchers("/api/v1/admin/**").hasAuthority("1");

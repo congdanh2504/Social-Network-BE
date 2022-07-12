@@ -4,6 +4,7 @@ import com.example.social_network_fpt_be.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.validation.constraints.Null;
 
 @Data
@@ -29,6 +30,15 @@ public class UserDto {
     private String description;
 
     public static UserDto toUserDto(User user) {
-        return new UserDto(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getPhone(), user.getRole(), user.getIsBlock(), user.getDescription());
+        return new UserDto(
+                user.getId(),
+                user.getEmail(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getUsername(),
+                user.getPhone(),
+                user.getRole(),
+                user.getIsBlock(),
+                user.getDescription());
     }
 }
