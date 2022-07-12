@@ -18,13 +18,13 @@
 - [PUT] `/api/v1/videos/{id}/`
 - [DELETE] `/api/v1/videos/{id}/`
 3. User:
-- [POST] `/api/v1/register` 
+- [POST] `/api/v1/users/register` 
     - email
     - username
     - firstName
     - lastName
     - password
-- [POST] `/api/v1/login`
+- [POST] `/api/v1/users/login`
     - username
     - password
 - [GET] `/api/v1/users` 
