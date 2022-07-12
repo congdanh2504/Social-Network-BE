@@ -29,28 +29,30 @@ public class UserServiceImp implements UserService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDto saveUser(User user) {
+    public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        User savedUser = userRepository.save(user);
-        return UserDto.toUserDto(savedUser);
+        return userRepository.save(user);
     }
 
     @Override
-    public List<UserDto> getUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream().map(UserDto::toUserDto).collect(Collectors.toList());
+    public List<User> getUsers() {
+        return userRepository.findAll();
     }
 
     @Override
-    public UserDto getUserByUsername(String username) {
-        User user = userRepository.findByUsername(username);
-        return UserDto.toUserDto(user);
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Override
-    public UserDto getUserById(Long id) {
+    public User getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
-        return UserDto.toUserDto(user.get());
+        return user.get();
+    }
+
+    @Override
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
 
     @Override

@@ -10,6 +10,10 @@ import javax.validation.constraints.NotBlank;
 public class AuthUserDto {
     @NotBlank
     private String username;
+    @NotBlank
+    private String firstName;
+    @NotBlank
+    private String lastName;
     @Min(value = 6, message = "Password must be at least 6 characters")
     private String password;
     @Email(message = "Must be email")

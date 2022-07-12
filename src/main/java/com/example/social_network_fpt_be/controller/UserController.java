@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.social_network_fpt_be.DTO.AuthUserDto;
+import com.example.social_network_fpt_be.DTO.UpdateUserDto;
 import com.example.social_network_fpt_be.DTO.UserDto;
 import com.example.social_network_fpt_be.model.User;
 import com.example.social_network_fpt_be.service.UserService;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -33,12 +35,22 @@ public class UserController {
 
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(userService.getUserById(id));
+        return ResponseEntity.ok().body(UserDto.toUserDto(userService.getUserById(id)));
+    }
+
+    @PutMapping()
+    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UpdateUserDto user, Authentication authentication) {
+        User currentUser = userService.getUserByUsername(authentication.getName());
+        currentUser.setFirstName(user.getFirstName());
+        currentUser.setLastName(user.getLastName());
+        currentUser.setPhone(user.getPhone());
+        currentUser.setDescription(user.getDescription());
+        return ResponseEntity.ok().body(UserDto.toUserDto(userService.updateUser(currentUser)));
     }
 
     @GetMapping("")
     public ResponseEntity<List<UserDto>> getUsers() {
-        return ResponseEntity.ok().body(userService.getUsers());
+        return ResponseEntity.ok().body(userService.getUsers().stream().map(UserDto::toUserDto).collect(Collectors.toList()));
     }
 
     @PostMapping("register")
@@ -47,8 +59,10 @@ public class UserController {
         newUser.setUsername(user.getUsername());
         newUser.setPassword(user.getPassword());
         newUser.setEmail(user.getEmail());
+        newUser.setFirstName(user.getFirstName());
+        newUser.setLastName(user.getLastName());
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/users").toUriString());
-        return ResponseEntity.created(uri).body(userService.saveUser(newUser));
+        return ResponseEntity.created(uri).body(UserDto.toUserDto(userService.saveUser(newUser)));
     }
 
     @GetMapping("refresh-token")
@@ -62,7 +76,7 @@ public class UserController {
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refresh_token);
                 String username = decodedJWT.getSubject();
-                UserDto user = userService.getUserByUsername(username);
+                User user = userService.getUserByUsername(username);
                 final int timeMillisInTenMinutes = 1000 * 10 * 60;
                 String[] roles = {String.valueOf(user.getRole())};
                 String accessToken = JWT.create()
