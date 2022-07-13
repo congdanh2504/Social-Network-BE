@@ -109,7 +109,7 @@ public class UserController {
             }
 
         } else {
-            throw new RuntimeException("Refresh token is missing");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }

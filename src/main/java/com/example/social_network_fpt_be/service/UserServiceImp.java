@@ -1,7 +1,6 @@
 package com.example.social_network_fpt_be.service;
 
 
-import com.example.social_network_fpt_be.DTO.UserDto;
 import com.example.social_network_fpt_be.model.User;
 import com.example.social_network_fpt_be.repository.UserRepository;
 import com.google.api.client.util.Lists;
@@ -18,7 +17,6 @@ import javax.transaction.Transactional;
 import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +66,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     private String removeAccent(String s) {
         String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-        return pattern.matcher(temp).replaceAll("");
+        return pattern.matcher(temp).replaceAll("").replace('đ', 'd').replace('Đ', 'D');
     }
 
     @Override
