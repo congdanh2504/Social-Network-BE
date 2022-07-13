@@ -39,4 +39,9 @@ public class User {
 
     @Column(name = "description")
     private String description;
+
+    @Override
+    public int hashCode() {
+        return id.intValue();
+    }
 }
