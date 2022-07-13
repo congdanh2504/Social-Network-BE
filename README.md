@@ -27,6 +27,8 @@
 - [POST] `/api/v1/users/login`
     - username
     - password
+- [GET] `/api/v1/users/search?username=[username]`
+- [GET] `/api/v1/users/profile` (Authorization Bearer access token) 
 - [GET] `/api/v1/users` 
 - [PUT] `/api/v1/users` (Authorization Bearer access token) 
     - firstName

@@ -38,6 +38,11 @@ public class UserController {
         return ResponseEntity.ok().body(UserDto.toUserDto(userService.getUserByUsername(authentication.getName())));
     }
 
+    @GetMapping("search")
+    public ResponseEntity<List<UserDto>> searchUsers(@RequestParam String username) {
+        return ResponseEntity.ok().body(userService.searchByUsername(username).stream().map(UserDto::toUserDto).collect(Collectors.toList()));
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok().body(UserDto.toUserDto(userService.getUserById(id)));
@@ -104,7 +109,7 @@ public class UserController {
             }
 
         } else {
-            throw new RuntimeException("Refresh token is missing");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 }
