@@ -1,9 +1,8 @@
 package com.example.social_network_fpt_be.service;
 
 
-import com.example.social_network_fpt_be.DTO.UserDto;
 import com.example.social_network_fpt_be.model.User;
-import com.example.social_network_fpt_be.repository.UserRepository;
+import com.example.social_network_fpt_be.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

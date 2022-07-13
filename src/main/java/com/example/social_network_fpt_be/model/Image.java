@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_image;
+    private int id_image;
     private String url;
     private LocalDateTime create_date;
     private String type;
@@ -24,11 +24,11 @@ public class Image {
         this.id = id;
     }
 
-    public Long getId_image() {
+    public int getId_image() {
         return id_image;
     }
 
-    public void setId_image(Long id_image) {
+    public void setId_image(int id_image) {
         this.id_image = id_image;
     }
 
