@@ -100,7 +100,7 @@ public class ImageService {
         Blob blob = storage.create(blobInfo, imageFile.getInputStream());
 
         // Get URL of imageFile upload into firebase
-        String result = PATH_PREFIX + BUCKET_NAME + "/" + name + PATH_SUFFIX;
+        String result = PATH_PREFIX + BUCKET_NAME + "/" + name;
         return result;
     }
 

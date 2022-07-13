@@ -2,11 +2,8 @@ package com.example.social_network_fpt_be.service;
 
 
 import com.example.social_network_fpt_be.model.User;
-<<<<<<< HEAD
 import com.example.social_network_fpt_be.repository.UserRepository;
-=======
 import com.google.api.client.util.Lists;
->>>>>>> 69d5ac9ea0e0f5df3061a1cf28952bee276d315a
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,16 +14,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-=======
 import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Pattern;
->>>>>>> 69d5ac9ea0e0f5df3061a1cf28952bee276d315a
 
 @Service
 @RequiredArgsConstructor

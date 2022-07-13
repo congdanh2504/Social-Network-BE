@@ -4,11 +4,13 @@ import com.example.social_network_fpt_be.model.Image;
 import com.example.social_network_fpt_be.model.Post;
 import com.example.social_network_fpt_be.service.ImageService;
 import com.example.social_network_fpt_be.service.PostService;
+import com.example.social_network_fpt_be.service.UserService;
 import com.example.social_network_fpt_be.service.VideoService;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,6 +33,9 @@ public class PostController {
     @Autowired
     private VideoService videoService;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping(path = "")
     public ResponseEntity<List<Hashtable<String, Object>>> getPostList() {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPostList());
@@ -44,9 +49,10 @@ public class PostController {
     @PostMapping(path = "", consumes = "multipart/form-data")
     public ResponseEntity<Object> createPost(@RequestPart("post_video") MultipartFile post_video,
                                            @RequestPart("post_image") List<MultipartFile> post_image,
-                                           @RequestParam("id_user") int id_user,
+                                           Authentication authentication,
                                            @RequestParam("title") String title,
                                            @RequestParam("description") String description) throws IOException {
+        int id_user = userService.getUserByUsername(authentication.getName()).getId().intValue();
         if (post_video.getContentType() != null) {
             Hashtable<String, Object> checkVideo = videoService.checkFile(post_video);
             if (checkVideo.get("status").equals(0)){
@@ -74,9 +80,10 @@ public class PostController {
     public ResponseEntity<Object> updatePost(@PathVariable int id_post,
                                              @RequestPart("post_video") MultipartFile post_video,
                                              @RequestPart("post_image") List<MultipartFile> post_image,
-                                             @RequestParam("id_user") int id_user,
+                                             Authentication authentication,
                                              @RequestParam("title") String title,
                                              @RequestParam("description") String description) throws IOException {
+        int id_user = userService.getUserByUsername(authentication.getName()).getId().intValue();
         if (post_video.getContentType() != null) {
             Hashtable<String, Object> checkVideo = videoService.checkFile(post_video);
             if (checkVideo.get("status").equals(0)){
