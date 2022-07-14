@@ -2,6 +2,7 @@ package com.example.social_network_fpt_be.DTO;
 
 import lombok.Data;
 import org.springframework.format.annotation.NumberFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 
@@ -16,4 +17,6 @@ public class UpdateUserDto {
     String phone;
     @NotBlank
     String description;
+    MultipartFile avtImage;
+    MultipartFile coverImage;
 }

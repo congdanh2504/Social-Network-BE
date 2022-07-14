@@ -48,14 +48,9 @@ public class UserController {
         return ResponseEntity.ok().body(UserDto.toUserDto(userService.getUserById(id)));
     }
 
-    @PutMapping()
-    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UpdateUserDto user, Authentication authentication) {
-        User currentUser = userService.getUserByUsername(authentication.getName());
-        currentUser.setFirstName(user.getFirstName());
-        currentUser.setLastName(user.getLastName());
-        currentUser.setPhone(user.getPhone());
-        currentUser.setDescription(user.getDescription());
-        return ResponseEntity.ok().body(UserDto.toUserDto(userService.updateUser(currentUser)));
+    @PutMapping(path = "", consumes = "multipart/form-data")
+    public ResponseEntity<UserDto> updateUser(@Valid @ModelAttribute UpdateUserDto updateUser, Authentication authentication) throws IOException {
+        return ResponseEntity.ok().body(UserDto.toUserDto(userService.updateUser(updateUser, authentication.getName())));
     }
 
     @GetMapping("")
