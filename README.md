@@ -30,11 +30,13 @@
 - [GET] `/api/v1/users/search?username=[username]`
 - [GET] `/api/v1/users/profile` (Authorization Bearer access token) 
 - [GET] `/api/v1/users` 
-- [PUT] `/api/v1/users` (Authorization Bearer access token) 
+- [PUT] `/api/v1/users` (Authorization Bearer access token) (using form-data)
     - firstName
     - lastName
     - phone
     - description
+    - avtImage
+    - coverImage
 - [GET] `/api/v1/users/{id}` 
 - [GET] `/api/v1/users/refresh-token` (Authorization Bearer refresh token) 
 
