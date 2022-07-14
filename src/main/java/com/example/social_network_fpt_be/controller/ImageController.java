@@ -3,6 +3,7 @@ package com.example.social_network_fpt_be.controller;
 
 import com.example.social_network_fpt_be.model.Image;
 import com.example.social_network_fpt_be.service.ImageService;
+import com.google.protobuf.Enum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,52 +31,41 @@ public class ImageController {
     }
 
     @GetMapping(path = "/{id_image}")
-    public ResponseEntity<Image> getImageById(@PathVariable Long id_image) {
+    public ResponseEntity<Image> getImageById(@PathVariable int id_image) {
         return ResponseEntity.status(HttpStatus.OK).body(imageService.getImageById(id_image));
     }
 
     @PostMapping(path = "", consumes = "multipart/form-data")
-    public ResponseEntity<Object> createImage(@RequestPart("imageFile") MultipartFile imageFile,
-                                      @RequestParam("type") String type,
-                                      @RequestParam("id") int id) throws IOException {
-        // try to use modelAtribute
-        String result;
-        if (imageFile.isEmpty()) {
-            result = "File is empty";
-        }else if (imageFile.getSize() > MAX_SIZE) {
-            result = "File is too large";
-        } else if (Objects.equals(imageFile.getContentType(), "image/png")
-                || Objects.equals(imageFile.getContentType(), "image/jpeg")
-                || Objects.equals(imageFile.getContentType(), "image/jpg")) {
-            return ResponseEntity.status(HttpStatus.OK).body(imageService.createImage(imageFile, type, id));
-        } else {
-            result = "File is not an image";
+    public ResponseEntity<Object> createImage(@RequestPart("imageFile") List<MultipartFile> imageFile,
+                                              @RequestParam("type") String type,
+                                              @RequestParam("id") int id) throws IOException {
+        List<Image> images = new ArrayList<>();
+        for (MultipartFile multipartFile: imageFile){
+            Hashtable<String, Object> result = imageService.checkFile(multipartFile);
+            if (result.get("status").equals(0)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.get("message"));
+            } else {
+                images.add(imageService.createImage(multipartFile, type, id));
+            }
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        return ResponseEntity.status(HttpStatus.OK).body(images);
     }
 
     @PutMapping(path = "/{id_image}")
-    public ResponseEntity<Object> updateImage(@PathVariable Long id_image,
+    public ResponseEntity<Object> updateImage(@PathVariable int id_image,
                              @RequestPart("imageFile") MultipartFile imageFile,
                              @RequestParam("type") String type,
                              @RequestParam("id") int id) throws IOException {
-        String result;
-        if (imageFile.isEmpty()) {
-            result = "File is empty";
-        }else if (imageFile.getSize() > MAX_SIZE) {
-            result = "File is too large";
-        } else if (Objects.equals(imageFile.getContentType(), "image/png")
-                || Objects.equals(imageFile.getContentType(), "image/jpeg")
-                || Objects.equals(imageFile.getContentType(), "image/jpg")) {
-            return ResponseEntity.status(HttpStatus.OK).body(imageService.updateImage(id_image, imageFile, type, id));
+        Hashtable<String, Object> result = imageService.checkFile(imageFile);
+        if (result.get("status").equals(0)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.get("message"));
         } else {
-            result = "File is not an image";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(updateImage(id_image, imageFile, type, id));
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
 
     @DeleteMapping(path = "/{id_image}")
-    public ResponseEntity<String> deleteImage(@PathVariable Long id_image) {
+    public ResponseEntity<String> deleteImage(@PathVariable int id_image) {
         String result = imageService.deleteImage(id_image);
         if (result.equals("success")) {
             return ResponseEntity.status(HttpStatus.OK).body("Delete image success");

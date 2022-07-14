@@ -12,7 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static com.example.social_network_fpt_be.config.Setting.*;
@@ -27,7 +29,7 @@ public class VideoService {
         return videoRepository.findAll();
     }
 
-    public Video getVideoById(Long id_video) {
+    public Video getVideoById(int id_video) {
         return videoRepository.findById(id_video).orElse(null);
     }
 
@@ -38,10 +40,9 @@ public class VideoService {
         video.setCreate_date(LocalDateTime.now());
         videoRepository.save(video);
         return video;
-
     }
 
-    public Video updateVideo(Long id_video, MultipartFile newVideoFile) throws IOException {
+    public Video updateVideo(int id_video, MultipartFile newVideoFile) throws IOException {
         String url = uploadVideo(newVideoFile);
         Video newVideo = new Video();
         return videoRepository.findById(id_video)
@@ -53,7 +54,7 @@ public class VideoService {
                     .orElse(null);
     }
 
-    public String deleteVideo(Long id_video) {
+    public String deleteVideo(int id_video) {
         try{
             videoRepository.deleteById(id_video);
             return "success";
@@ -82,7 +83,25 @@ public class VideoService {
         Blob blob = storage.create(blobInfo, videoFile.getInputStream());
 
         // Get URL of imageFile upload into firebase
-        result = PATH_PREFIX + BUCKET_NAME + "/" + name + PATH_SUFFIX;
+        result = PATH_PREFIX + BUCKET_NAME + "/" + name;
         return result;
+    }
+
+    public Hashtable<String, Object> checkFile(MultipartFile videoFile) {
+        Hashtable<String, Object> postList = new Hashtable<>();
+        if (videoFile.isEmpty()) {
+            postList.put("status", 0);
+            postList.put("message", "Video file is empty");
+        }else if (videoFile.getSize() > MAX_SIZE) {
+            postList.put("status", 0);
+            postList.put("message", "Video file is too large");
+        } else if (Objects.equals(videoFile.getContentType(), "video/mp4")) {
+            postList.put("status", 1);
+            postList.put("message", "Success");
+        } else {
+            postList.put("status", 0);
+            postList.put("message", "Video file is not an video");
+        }
+        return postList;
     }
 }

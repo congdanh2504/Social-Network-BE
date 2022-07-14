@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_video;
+    private Integer id_video;
     private String url;
     private LocalDateTime create_date;
 
@@ -19,11 +19,11 @@ public class Video {
         this.create_date = create_date;
     }
 
-    public Long getId_video() {
+    public Integer getId_video() {
         return id_video;
     }
 
-    public void setId_video(Long id_video) {
+    public void setId_video(int id_video) {
         this.id_video = id_video;
     }
 
