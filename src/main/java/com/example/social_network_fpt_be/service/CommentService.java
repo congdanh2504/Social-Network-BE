@@ -37,8 +37,16 @@ public class CommentService {
                 commemtList.put("id_comment_child", getCommentChild(comment.getId_comment()));
                 commemtList.put("create_date", comment.getCreate_date());
                 commemtList.put("like_number", comment.getLike_number());
-                for (Object img : imageService.findImageByTypeAndId("comment_image", comment.getId_comment())) {
-                    commemtList.put("image", img);
+                List<Hashtable<String, Object>> imageListAll = new ArrayList<>();
+                Hashtable<String,Object> imageList = new Hashtable<>();
+                for (Object image : imageService.findImageByTypeAndId("comment_image", comment.getId_comment())) {
+                    imageList.put("id_image", ((Object[]) image)[0]);
+                    imageList.put("url", ((Object[]) image)[1]);
+                    imageList.put("create_date", ((Object[]) image)[2]);
+                    imageList.put("type", ((Object[]) image)[3]);
+                    imageList.put("id", ((Object[]) image)[4]);
+                    imageListAll.add(imageList);
+                    commemtList.put("image_list", imageListAll);
                 }
                 result.add(commemtList);
             }
@@ -67,8 +75,16 @@ public class CommentService {
             commemtList.put("id_comment_child", commentChild == null ? "" : commentChild);
             commemtList.put("create_date", comment.getCreate_date());
             commemtList.put("like_number", comment.getLike_number());
-            for (Object img : imageService.findImageByTypeAndId("comment_image", comment.getId_comment())) {
-                commemtList.put("image", img);
+            List<Hashtable<String, Object>> imageListAll = new ArrayList<>();
+            Hashtable<String,Object> imageList = new Hashtable<>();
+            for (Object image : imageService.findImageByTypeAndId("comment_image", comment.getId_comment())) {
+                imageList.put("id_image", ((Object[]) image)[0]);
+                imageList.put("url", ((Object[]) image)[1]);
+                imageList.put("create_date", ((Object[]) image)[2]);
+                imageList.put("type", ((Object[]) image)[3]);
+                imageList.put("id", ((Object[]) image)[4]);
+                imageListAll.add(imageList);
+                commemtList.put("image_list", imageListAll);
             }
             result.add(commemtList);
         }
@@ -86,8 +102,16 @@ public class CommentService {
             commemtList.put("id_comment_child", getCommentChild(comment.getId_comment()));
             commemtList.put("create_date", comment.getCreate_date());
             commemtList.put("like_number", comment.getLike_number());
-            for (Object img : imageService.findImageByTypeAndId("comment_image", comment.getId_comment())) {
-                commemtList.put("image", img);
+            List<Hashtable<String, Object>> imageListAll = new ArrayList<>();
+            Hashtable<String,Object> imageList = new Hashtable<>();
+            for (Object image : imageService.findImageByTypeAndId("comment_image", comment.getId_comment())) {
+                imageList.put("id_image", ((Object[]) image)[0]);
+                imageList.put("url", ((Object[]) image)[1]);
+                imageList.put("create_date", ((Object[]) image)[2]);
+                imageList.put("type", ((Object[]) image)[3]);
+                imageList.put("id", ((Object[]) image)[4]);
+                imageListAll.add(imageList);
+                commemtList.put("image_list", imageListAll);
             }
             return commemtList;
         } catch (Exception e) {
