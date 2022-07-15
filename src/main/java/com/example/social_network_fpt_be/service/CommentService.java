@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -24,20 +25,29 @@ public class CommentService {
     private ImageService imageService;
 
     public List<Hashtable<String, Object>> getAllComments() {
-        List<Hashtable<String, Object>> result = new ArrayList<>();
-        List<Comment> comments = commentRepository.getCommentRoot();
-        for (Comment comment: comments){
-            Hashtable<String, Object> commemtList = new Hashtable<>();
-            commemtList.put("id_comment", comment.getId_comment());
-            commemtList.put("id_post", comment.getId_post());
-            commemtList.put("id_user_comment", comment.getId_user_comment());
-            commemtList.put("comment", comment.getComment());
-            commemtList.put("id_comment_child", getCommentChild(comment.getId_comment()));
-            commemtList.put("create_date", comment.getCreate_date());
-            commemtList.put("like_number", comment.getLike_number());
-            result.add(commemtList);
+        try {
+            List<Hashtable<String, Object>> result = new ArrayList<>();
+            List<Comment> comments = commentRepository.getCommentRoot();
+            for (Comment comment: comments){
+                Hashtable<String, Object> commemtList = new Hashtable<>();
+                commemtList.put("id_comment", comment.getId_comment());
+                commemtList.put("id_post", comment.getId_post());
+                commemtList.put("id_user_comment", comment.getId_user_comment());
+                commemtList.put("comment", comment.getComment());
+                commemtList.put("id_comment_child", getCommentChild(comment.getId_comment()));
+                commemtList.put("create_date", comment.getCreate_date());
+                commemtList.put("like_number", comment.getLike_number());
+                for (Object img : imageService.findImageByTypeAndId("comment_image", comment.getId_comment())) {
+                    commemtList.put("image", img);
+                }
+                result.add(commemtList);
+            }
+            return result;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
         }
-        return result;
+
     }
 
     public List<Hashtable<String, Object>> getCommentChild(Integer id_comment_father){
@@ -57,22 +67,34 @@ public class CommentService {
             commemtList.put("id_comment_child", commentChild == null ? "" : commentChild);
             commemtList.put("create_date", comment.getCreate_date());
             commemtList.put("like_number", comment.getLike_number());
+            for (Object img : imageService.findImageByTypeAndId("comment_image", comment.getId_comment())) {
+                commemtList.put("image", img);
+            }
             result.add(commemtList);
         }
         return result;
     }
 
     public Hashtable<String, Object> getCommentById(Integer id_comment){
-        Comment comment = commentRepository.findById(id_comment).get();
-        Hashtable<String, Object> commemtList = new Hashtable<>();
-        commemtList.put("id_comment", comment.getId_comment());
-        commemtList.put("id_post", comment.getId_post());
-        commemtList.put("id_user_comment", comment.getId_user_comment());
-        commemtList.put("comment", comment.getComment());
-        commemtList.put("id_comment_child", getCommentChild(comment.getId_comment()));
-        commemtList.put("create_date", comment.getCreate_date());
-        commemtList.put("like_number", comment.getLike_number());
-        return commemtList;
+        try {
+            Comment comment = commentRepository.findById(id_comment).get();
+            Hashtable<String, Object> commemtList = new Hashtable<>();
+            commemtList.put("id_comment", comment.getId_comment());
+            commemtList.put("id_post", comment.getId_post());
+            commemtList.put("id_user_comment", comment.getId_user_comment());
+            commemtList.put("comment", comment.getComment());
+            commemtList.put("id_comment_child", getCommentChild(comment.getId_comment()));
+            commemtList.put("create_date", comment.getCreate_date());
+            commemtList.put("like_number", comment.getLike_number());
+            for (Object img : imageService.findImageByTypeAndId("comment_image", comment.getId_comment())) {
+                commemtList.put("image", img);
+            }
+            return commemtList;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+
     }
 
     public Hashtable<String, Object> createComment(MultipartFile comment_image, Integer id_post, Integer id_user_comment, Integer id_comment_father,String comment) throws IOException {
@@ -89,4 +111,34 @@ public class CommentService {
         }
         return getCommentById(cmt.getId_comment());
     }
+
+    public Hashtable<String, Object> updateComment(Integer id_comment, MultipartFile comment_image, String comment, Long like_number) throws IOException {
+        Optional<Comment> commentOld = commentRepository.findById(id_comment);
+        if (commentOld.isPresent()){
+            commentOld.get().setComment(comment);
+            commentOld.get().setCreate_date(LocalDateTime.now());
+            commentOld.get().setLike_number(like_number);
+            if (comment_image.getContentType() != null){
+                imageService.deleteImageByTypeAndId("comment_image", id_comment);
+                imageService.createImage(comment_image, "comment_image", commentOld.get().getId_comment());
+            } else {
+                imageService.deleteImageByTypeAndId("comment_image", id_comment);
+            }
+            commentRepository.save(commentOld.get());
+        }
+        return getCommentById(id_comment);
+    }
+
+    public String deleteComment(Integer id_comment){
+        try{
+            commentRepository.deleteById(id_comment);
+            imageService.deleteImageByTypeAndId("comment_image", id_comment);
+            return "success";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "fail";
+        }
+    }
+
+
 }
