@@ -67,7 +67,7 @@ public class ImageService {
         }
     }
 
-    public List<Object> findImageForPost(String type, Integer id) {
+    public List<Object> findImageByTypeAndId(String type, Integer id) {
         return imageRepository.findImageByTypeAndId(type, id);
     }
 
