@@ -23,7 +23,6 @@ public class ImageService {
     @Autowired
     private ImageRepository imageRepository;
 
-
     public List<Image> getImageList() {
         return imageRepository.findAll();
     }
