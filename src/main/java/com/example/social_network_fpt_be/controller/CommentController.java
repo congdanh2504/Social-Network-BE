@@ -3,14 +3,14 @@ package com.example.social_network_fpt_be.controller;
 import com.example.social_network_fpt_be.service.CommentService;
 import com.example.social_network_fpt_be.service.ImageService;
 import com.example.social_network_fpt_be.service.UserService;
+import com.google.api.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -36,10 +36,10 @@ public class CommentController {
 
     @PostMapping(path = "")
     public ResponseEntity<Object> createComment(@RequestPart("comment_image") MultipartFile comment_image,
-                                                                   @RequestParam("id_post") Integer id_post,
-                                                                   Authentication authentication,
-                                                                   @RequestParam("id_comment_father") Integer id_comment_father,
-                                                                   @RequestParam("comment") String comment) throws IOException {
+                                                @RequestParam("id_post") Integer id_post,
+                                                Authentication authentication,
+                                                @RequestParam("id_comment_father") Integer id_comment_father,
+                                                @RequestParam("comment") String comment) throws IOException {
         Integer id_user_comment = userService.getUserByUsername(authentication.getName()).getId().intValue();
         if (comment_image.getContentType() != null) {
             Hashtable<String, Object> checkImage = imageService.checkFile(comment_image);
