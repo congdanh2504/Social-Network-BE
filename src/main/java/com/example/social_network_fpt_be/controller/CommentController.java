@@ -40,7 +40,7 @@ public class CommentController {
                                                 Authentication authentication,
                                                 @RequestParam("id_comment_father") Integer id_comment_father,
                                                 @RequestParam("comment") String comment) throws IOException {
-        Integer id_user_comment = userService.getUserByUsername(authentication.getName()).getId().intValue();
+        int id_user_comment = userService.getUserByUsername(authentication.getName()).getId().intValue();
         if (comment_image.getContentType() != null) {
             Hashtable<String, Object> checkImage = imageService.checkFile(comment_image);
             if (checkImage.get("status").equals(0)){
