@@ -27,11 +27,11 @@ public class ImageService {
         return imageRepository.findAll();
     }
 
-    public Image getImageById(Integer id_image) {
+    public Image getImageById(Long id_image) {
         return imageRepository.findById(id_image).orElse(null);
     }
 
-    public Image createImage(MultipartFile imageFile, String type, Integer id) throws IOException {
+    public Image createImage(MultipartFile imageFile, String type, Long id) throws IOException {
         String url = uploadImage(imageFile);
         Image image = new Image();
         image.setUrl(url);
@@ -42,7 +42,7 @@ public class ImageService {
         return image;
     }
 
-    public Image updateImage(Integer id_image, MultipartFile newImageFile, String newType, Integer newId) throws IOException {
+    public Image updateImage(Long id_image, MultipartFile newImageFile, String newType, Long newId) throws IOException {
         String url = uploadImage(newImageFile);
         Image newImage = new Image();
         return imageRepository.findById(id_image)
@@ -56,7 +56,7 @@ public class ImageService {
                     .orElse(null);
     }
 
-    public String deleteImage(Integer id_image) {
+    public String deleteImage(Long id_image) {
         try{
             imageRepository.deleteById(id_image);
             return "success";
@@ -66,15 +66,15 @@ public class ImageService {
         }
     }
 
-    public List<Object> findImageByTypeAndId(String type, Integer id) {
+    public List<Object> findImageByTypeAndId(String type, Long id) {
         return imageRepository.findImageByTypeAndId(type, id);
     }
 
-    public void deleteImageByTypeAndId(String type, Integer id) {
+    public void deleteImageByTypeAndId(String type, Long id) {
         try{
             List<Object> image = imageRepository.findImageByTypeAndId(type, id);
             for (Object img: image) {
-                deleteImage((Integer) ((Object[]) img)[0]);
+                deleteImage((Long) ((Object[]) img)[0]);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,6 +101,11 @@ public class ImageService {
         // Get URL of imageFile upload into firebase
         String result = PATH_PREFIX + BUCKET_NAME + "/" + name;
         return result;
+    }
+
+    public String getAvatarByUser(Long userId) {
+        Image image = imageRepository.getAvatarByUser(userId);
+        return image.getUrl();
     }
 
     public Hashtable<String, Object> checkFile(MultipartFile imageFile) {

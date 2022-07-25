@@ -29,7 +29,7 @@ public class VideoService {
         return videoRepository.findAll();
     }
 
-    public Video getVideoById(int id_video) {
+    public Video getVideoById(Long id_video) {
         return videoRepository.findById(id_video).orElse(null);
     }
 
@@ -42,7 +42,7 @@ public class VideoService {
         return video;
     }
 
-    public Video updateVideo(int id_video, MultipartFile newVideoFile) throws IOException {
+    public Video updateVideo(Long id_video, MultipartFile newVideoFile) throws IOException {
         String url = uploadVideo(newVideoFile);
         Video newVideo = new Video();
         return videoRepository.findById(id_video)
@@ -54,7 +54,7 @@ public class VideoService {
                     .orElse(null);
     }
 
-    public String deleteVideo(int id_video) {
+    public String deleteVideo(Long id_video) {
         try{
             videoRepository.deleteById(id_video);
             return "success";

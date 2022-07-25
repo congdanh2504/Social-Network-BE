@@ -35,7 +35,7 @@ public class PostController {
     }
 
     @GetMapping(path = "{id_post}")
-    public ResponseEntity<Hashtable<String, Object>> getPostById(@PathVariable int id_post) {
+    public ResponseEntity<Hashtable<String, Object>> getPostById(@PathVariable Long id_post) {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPostByID(id_post));
     }
 
@@ -45,7 +45,7 @@ public class PostController {
                                              Authentication authentication,
                                              @RequestParam("title") String title,
                                              @RequestParam("description") String description) throws IOException {
-        int id_user = userService.getUserByUsername(authentication.getName()).getId().intValue();
+        Long id_user = userService.getUserByUsername(authentication.getName()).getId();
         if (post_video.getContentType() != null) {
             Hashtable<String, Object> checkVideo = videoService.checkFile(post_video);
             if (checkVideo.get("status").equals(0)) {
@@ -70,13 +70,13 @@ public class PostController {
     }
 
     @PutMapping(path = "{id_post}")
-    public ResponseEntity<Object> updatePost(@PathVariable int id_post,
+    public ResponseEntity<Object> updatePost(@PathVariable Long id_post,
                                              @RequestPart("post_video") MultipartFile post_video,
                                              @RequestPart("post_image") List<MultipartFile> post_image,
                                              Authentication authentication,
                                              @RequestParam("title") String title,
                                              @RequestParam("description") String description) throws IOException {
-        int id_user = userService.getUserByUsername(authentication.getName()).getId().intValue();
+        Long id_user = userService.getUserByUsername(authentication.getName()).getId();
         if (post_video.getContentType() != null) {
             Hashtable<String, Object> checkVideo = videoService.checkFile(post_video);
             if (checkVideo.get("status").equals(0)) {
@@ -101,7 +101,7 @@ public class PostController {
     }
 
     @DeleteMapping(path = "{id_post}")
-    public ResponseEntity<Object> deletePost(@PathVariable int id_post) {
+    public ResponseEntity<Object> deletePost(@PathVariable Long id_post) {
         String result = postService.deletePost(id_post);
         if (result.equals("success")) {
             return ResponseEntity.status(HttpStatus.OK).body("Delete post success");

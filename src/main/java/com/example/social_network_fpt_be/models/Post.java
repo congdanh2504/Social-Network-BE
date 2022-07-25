@@ -8,19 +8,19 @@ import java.time.LocalDateTime;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_post;
-    private Integer id_user;
+    private Long id_post;
+    private Long id_user;
     private String title;
     private String description;
     private LocalDateTime create_date;
-    private Integer post_video;
+    private Long post_video;
     // create a field is not a column in database
     @Transient
     private String url;
 
     public Post(){}
 
-    public Post(Integer id_post, Integer id_user, String title, String description, LocalDateTime create_date, Integer post_video, String url) {
+    public Post(Long id_post, Long id_user, String title, String description, LocalDateTime create_date, Long post_video, String url) {
         this.id_post = id_post;
         this.id_user = id_user;
         this.title = title;
@@ -30,19 +30,19 @@ public class Post {
         this.url = url;
     }
 
-    public Integer getId_post() {
+    public Long getId_post() {
         return id_post;
     }
 
-    public void setId_post(Integer id_post) {
+    public void setId_post(Long id_post) {
         this.id_post = id_post;
     }
 
-    public Integer getId_user() {
+    public Long getId_user() {
         return id_user;
     }
 
-    public void setId_user(Integer id_user) {
+    public void setId_user(Long id_user) {
         this.id_user = id_user;
     }
 
@@ -70,11 +70,11 @@ public class Post {
         this.create_date = create_date;
     }
 
-    public Integer getPost_video() {
+    public Long getPost_video() {
         return post_video;
     }
 
-    public void setPost_video(Integer post_video) {
+    public void setPost_video(Long post_video) {
         this.post_video = post_video;
     }
 

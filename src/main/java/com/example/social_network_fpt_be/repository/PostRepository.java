@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 @Repository
-public interface PostRepository extends JpaRepository<Post, Integer> {
+public interface PostRepository extends JpaRepository<Post, Long> {
     @Query(
             value = "SELECT p.id_post, p.id_user, p.title, p.description, p.create_date, p.post_video, v.url " +
                     "FROM Post p " +
@@ -24,7 +24,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
                     "ON p.post_video = v.id_video " +
                     "WHERE p.id_post = ?1",
             nativeQuery = true)
-    Object getPostBy(int id);
+    Object getPostBy(Long id);
 
 
 }

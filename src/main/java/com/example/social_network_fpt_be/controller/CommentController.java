@@ -30,17 +30,17 @@ public class CommentController {
     }
 
     @GetMapping(path = "/{id_comment}")
-    public ResponseEntity<Hashtable<String, Object>> getCommentById(@PathVariable Integer id_comment) {
+    public ResponseEntity<Hashtable<String, Object>> getCommentById(@PathVariable Long id_comment) {
         return ResponseEntity.status(HttpStatus.OK).body(commentService.getCommentById(id_comment));
     }
 
     @PostMapping(path = "")
     public ResponseEntity<Object> createComment(@RequestPart("comment_image") MultipartFile comment_image,
-                                                @RequestParam("id_post") Integer id_post,
+                                                @RequestParam("id_post") Long id_post,
                                                 Authentication authentication,
-                                                @RequestParam("id_comment_father") Integer id_comment_father,
+                                                @RequestParam("id_comment_father") Long id_comment_father,
                                                 @RequestParam("comment") String comment) throws IOException {
-        int id_user_comment = userService.getUserByUsername(authentication.getName()).getId().intValue();
+        Long id_user_comment = userService.getUserByUsername(authentication.getName()).getId();
         if (comment_image.getContentType() != null) {
             Hashtable<String, Object> checkImage = imageService.checkFile(comment_image);
             if (checkImage.get("status").equals(0)){
@@ -55,7 +55,7 @@ public class CommentController {
     }
 
     @PutMapping(path = "{id_comment}")
-    public ResponseEntity<Object> updateComment(@PathVariable("id_comment") Integer id_comment,
+    public ResponseEntity<Object> updateComment(@PathVariable("id_comment") Long id_comment,
                                                 @RequestPart("comment_image") MultipartFile comment_image,
                                                 @RequestParam("comment") String comment,
                                                 @RequestParam("like_number") Long like_number) throws IOException {
@@ -73,7 +73,7 @@ public class CommentController {
     }
 
     @DeleteMapping(path = "/{id_comment}")
-    public ResponseEntity<Object> deleteComment(@PathVariable("id_comment") Integer id_comment) {
+    public ResponseEntity<Object> deleteComment(@PathVariable("id_comment") Long id_comment) {
         String result = commentService.deleteComment(id_comment);
         if (result.equals("success")) {
             return ResponseEntity.status(HttpStatus.OK).body("Delete post success");

@@ -27,14 +27,14 @@ public class ImageController {
     }
 
     @GetMapping(path = "/{id_image}")
-    public ResponseEntity<Image> getImageById(@PathVariable int id_image) {
+    public ResponseEntity<Image> getImageById(@PathVariable Long id_image) {
         return ResponseEntity.status(HttpStatus.OK).body(imageService.getImageById(id_image));
     }
 
     @PostMapping(path = "", consumes = "multipart/form-data")
     public ResponseEntity<Object> createImage(@RequestPart("imageFile") List<MultipartFile> imageFile,
                                               @RequestParam("type") String type,
-                                              @RequestParam("id") int id) throws IOException {
+                                              @RequestParam("id") Long id) throws IOException {
         List<Image> images = new ArrayList<>();
         for (MultipartFile multipartFile: imageFile){
             Hashtable<String, Object> result = imageService.checkFile(multipartFile);
@@ -48,10 +48,10 @@ public class ImageController {
     }
 
     @PutMapping(path = "/{id_image}")
-    public ResponseEntity<Object> updateImage(@PathVariable int id_image,
+    public ResponseEntity<Object> updateImage(@PathVariable Long id_image,
                              @RequestPart("imageFile") MultipartFile imageFile,
                              @RequestParam("type") String type,
-                             @RequestParam("id") int id) throws IOException {
+                             @RequestParam("id") Long id) throws IOException {
         Hashtable<String, Object> result = imageService.checkFile(imageFile);
         if (result.get("status").equals(0)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.get("message"));
@@ -61,7 +61,7 @@ public class ImageController {
     }
 
     @DeleteMapping(path = "/{id_image}")
-    public ResponseEntity<String> deleteImage(@PathVariable int id_image) {
+    public ResponseEntity<String> deleteImage(@PathVariable Long id_image) {
         String result = imageService.deleteImage(id_image);
         if (result.equals("success")) {
             return ResponseEntity.status(HttpStatus.OK).body("Delete image success");

@@ -8,10 +8,10 @@ import java.time.LocalDateTime;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_comment;
-    private Integer id_post;
-    private Integer id_user_comment;
-    private Integer id_comment_father;
+    private Long id_comment;
+    private Long id_post;
+    private Long id_user_comment;
+    private Long id_comment_father;
     private String comment;
     private Long like_number;
     private LocalDateTime create_date;
@@ -19,7 +19,7 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(Integer id_post, Integer id_user_comment, Integer id_comment_father, String comment, Long like_number, LocalDateTime create_date) {
+    public Comment(Long id_post, Long id_user_comment, Long id_comment_father, String comment, Long like_number, LocalDateTime create_date) {
         this.id_post = id_post;
         this.id_user_comment = id_user_comment;
         this.id_comment_father = id_comment_father;
@@ -28,35 +28,35 @@ public class Comment {
         this.create_date = create_date;
     }
 
-    public Integer getId_comment() {
+    public Long getId_comment() {
         return id_comment;
     }
 
-    public void setId_comment(Integer id_comment) {
+    public void setId_comment(Long id_comment) {
         this.id_comment = id_comment;
     }
 
-    public Integer getId_post() {
+    public Long getId_post() {
         return id_post;
     }
 
-    public void setId_post(Integer id_post) {
+    public void setId_post(Long id_post) {
         this.id_post = id_post;
     }
 
-    public Integer getId_user_comment() {
+    public Long getId_user_comment() {
         return id_user_comment;
     }
 
-    public void setId_user_comment(Integer id_user_comment) {
+    public void setId_user_comment(Long id_user_comment) {
         this.id_user_comment = id_user_comment;
     }
 
-    public Integer getId_comment_father() {
+    public Long getId_comment_father() {
         return id_comment_father;
     }
 
-    public void setId_comment_father(Integer id_comment_father) {
+    public void setId_comment_father(Long id_comment_father) {
         this.id_comment_father = id_comment_father;
     }
 

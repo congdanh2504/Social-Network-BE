@@ -25,7 +25,7 @@ public class VideoController {
     }
 
     @GetMapping(path = "/{id_video}")
-    public ResponseEntity<Video> getVideoById(@PathVariable int id_video) {
+    public ResponseEntity<Video> getVideoById(@PathVariable Long id_video) {
         return ResponseEntity.status(HttpStatus.OK).body(videoService.getVideoById(id_video));
     }
 
@@ -41,7 +41,7 @@ public class VideoController {
     }
 
     @PutMapping(path = "/{id_video}")
-    public ResponseEntity<Object> updateVideo(@PathVariable int id_video,
+    public ResponseEntity<Object> updateVideo(@PathVariable Long id_video,
                               @RequestPart("videoFile") MultipartFile videoFile) throws IOException {
         Hashtable<String, Object> result = videoService.checkFile(videoFile);
         if (result.get("status").equals(0)) {
@@ -52,7 +52,7 @@ public class VideoController {
     }
 
     @DeleteMapping(path = "/{id_video}")
-    public ResponseEntity<String> deleteVideo(@PathVariable int id_video) {
+    public ResponseEntity<String> deleteVideo(@PathVariable Long id_video) {
         String result = videoService.deleteVideo(id_video);
         if (result.equals("success")) {
             return ResponseEntity.status(HttpStatus.OK).body("Delete video success");

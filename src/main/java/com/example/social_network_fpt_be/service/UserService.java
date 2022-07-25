@@ -7,6 +7,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.social_network_fpt_be.models.dtos.UpdateUserDto;
 import com.example.social_network_fpt_be.models.User;
+import com.example.social_network_fpt_be.models.dtos.UserDto;
 import com.example.social_network_fpt_be.repository.UserRepository;
 import com.example.social_network_fpt_be.util.Constraints;
 import com.google.api.client.util.Lists;
@@ -54,6 +55,14 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username);
     }
 
+    public UserDto getProfile(String username) {
+        User user = userRepository.findByUsername(username);
+        UserDto userDto = UserDto.toUserDto(user);
+        String avt = imageService.getAvatarByUser(user.getId());
+        userDto.setAvt(avt);
+        return userDto;
+    }
+
     public User getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
         return user.get();
@@ -62,10 +71,10 @@ public class UserService implements UserDetailsService {
     public User updateUser(UpdateUserDto updateUser, String username) throws IOException {
         User currentUser = getUserByUsername(username);
         if (updateUser.getAvtImage() != null) {
-            imageService.createImage(updateUser.getAvtImage(), Constraints.USER_AVT, currentUser.getId().intValue());
+            imageService.createImage(updateUser.getAvtImage(), Constraints.USER_AVT, currentUser.getId());
         }
         if (updateUser.getCoverImage() != null) {
-            imageService.createImage(updateUser.getCoverImage(), Constraints.USER_COVER, currentUser.getId().intValue());
+            imageService.createImage(updateUser.getCoverImage(), Constraints.USER_COVER, currentUser.getId());
         }
         currentUser.setFirstName(updateUser.getFirstName());
         currentUser.setLastName(updateUser.getLastName());

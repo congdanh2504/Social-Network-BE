@@ -13,11 +13,11 @@ public class Image {
     private String url;
     private LocalDateTime create_date;
     private String type;
-    private Integer id;
+    private Long id;
 
     public Image(){}
 
-    public Image(String url, LocalDateTime create_date, String type, Integer id) {
+    public Image(String url, LocalDateTime create_date, String type, Long id) {
         this.url = url;
         this.create_date = create_date;
         this.type = type;
@@ -56,11 +56,11 @@ public class Image {
         this.type = type;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

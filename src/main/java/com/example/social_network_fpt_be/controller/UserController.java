@@ -29,7 +29,7 @@ public class UserController {
 
     @GetMapping("profile")
     public ResponseEntity<UserDto> getUserById(Authentication authentication) {
-        return ResponseEntity.ok().body(UserDto.toUserDto(userService.getUserByUsername(authentication.getName())));
+        return ResponseEntity.ok().body(userService.getProfile(authentication.getName()));
     }
 
     @GetMapping("search")

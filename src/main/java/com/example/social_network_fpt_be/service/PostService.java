@@ -50,7 +50,7 @@ public class PostService {
             }
             List<Hashtable<String, Object>> imageListAll = new ArrayList<>();
             Hashtable<String,Object> imageList = new Hashtable<>();
-            List<Object> images = imageService.findImageByTypeAndId("post_image", (int) postList.get("id_post"));
+            List<Object> images = imageService.findImageByTypeAndId("post_image", (Long) postList.get("id_post"));
             for (Object image: images) {
                 imageList.put("id_image", ((Object[]) image)[0]);
                 imageList.put("url", ((Object[]) image)[1]);
@@ -65,7 +65,7 @@ public class PostService {
         return result;
     }
 
-    public Hashtable<String, Object> getPostByID(Integer id_post) {
+    public Hashtable<String, Object> getPostByID(Long id_post) {
         Hashtable<String, Object> postList = new Hashtable<>();
         Object post = postRepository.getPostBy(id_post);
         if (post == null){
@@ -85,7 +85,7 @@ public class PostService {
         }
         List<Hashtable<String, Object>> imageListAll = new ArrayList<>();
         Hashtable<String,Object> imageList = new Hashtable<>();
-        List<Object> images = imageService.findImageByTypeAndId("post_image", (int) postList.get("id_post"));
+        List<Object> images = imageService.findImageByTypeAndId("post_image", (Long) postList.get("id_post"));
         for (Object image: images) {
             imageList.put("id_image", ((Object[]) image)[0]);
             imageList.put("url", ((Object[]) image)[1]);
@@ -98,8 +98,8 @@ public class PostService {
         return postList;
     }
 
-    public Hashtable<String, Object> createPost(MultipartFile post_video, List<MultipartFile> post_image, Integer id_user, String title, String description) throws IOException {
-        Integer id_video = null;
+    public Hashtable<String, Object> createPost(MultipartFile post_video, List<MultipartFile> post_image, Long id_user, String title, String description) throws IOException {
+        Long id_video = null;
         if (post_video.getContentType() != null) {
             id_video = videoService.createVideo(post_video).getId_video();
         }
@@ -118,8 +118,8 @@ public class PostService {
         return getPostByID(post.getId_post());
     }
 
-    public Hashtable<String, Object> updatePost(Integer id_post, MultipartFile post_video, List<MultipartFile> post_image, Integer id_user, String title, String description) throws IOException {
-        Integer id_video = null;
+    public Hashtable<String, Object> updatePost(Long id_post, MultipartFile post_video, List<MultipartFile> post_image, Long id_user, String title, String description) throws IOException {
+        Long id_video = null;
         Post postOld = postRepository.findById(id_post).orElse(null);
         if (post_video.getContentType() != null) {
             if (postOld != null && postOld.getPost_video() != null) {
@@ -152,7 +152,7 @@ public class PostService {
 
     }
 
-    public String deletePost(int id_post){
+    public String deletePost(Long id_post){
         try{
             postRepository.deleteById(id_post);
             imageService.deleteImageByTypeAndId("post_image", id_post);

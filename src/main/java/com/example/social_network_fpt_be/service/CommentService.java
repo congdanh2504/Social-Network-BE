@@ -57,7 +57,7 @@ public class CommentService {
 
     }
 
-    public List<Hashtable<String, Object>> getCommentChild(Integer id_comment_father){
+    public List<Hashtable<String, Object>> getCommentChild(Long id_comment_father){
         List<Hashtable<String, Object>> result = new ArrayList<>();
         List<Comment> comments = commentRepository.getCommentByFather(id_comment_father);
         for (Comment comment: comments) {
@@ -90,7 +90,7 @@ public class CommentService {
         return result;
     }
 
-    public Hashtable<String, Object> getCommentById(Integer id_comment){
+    public Hashtable<String, Object> getCommentById(Long id_comment){
         try {
             Comment comment = commentRepository.findById(id_comment).get();
             Hashtable<String, Object> commemtList = new Hashtable<>();
@@ -120,7 +120,7 @@ public class CommentService {
 
     }
 
-    public Hashtable<String, Object> createComment(MultipartFile comment_image, Integer id_post, Integer id_user_comment, Integer id_comment_father,String comment) throws IOException {
+    public Hashtable<String, Object> createComment(MultipartFile comment_image, Long id_post, Long id_user_comment, Long id_comment_father,String comment) throws IOException {
         Comment cmt = new Comment();
         cmt.setId_post(id_post);
         cmt.setId_user_comment(id_user_comment);
@@ -135,7 +135,7 @@ public class CommentService {
         return getCommentById(cmt.getId_comment());
     }
 
-    public Hashtable<String, Object> updateComment(Integer id_comment, MultipartFile comment_image, String comment, Long like_number) throws IOException {
+    public Hashtable<String, Object> updateComment(Long id_comment, MultipartFile comment_image, String comment, Long like_number) throws IOException {
         Optional<Comment> commentOld = commentRepository.findById(id_comment);
         if (commentOld.isPresent()){
             commentOld.get().setComment(comment);
@@ -152,7 +152,7 @@ public class CommentService {
         return getCommentById(id_comment);
     }
 
-    public String deleteComment(Integer id_comment){
+    public String deleteComment(Long id_comment){
         try{
             commentRepository.deleteById(id_comment);
             imageService.deleteImageByTypeAndId("comment_image", id_comment);

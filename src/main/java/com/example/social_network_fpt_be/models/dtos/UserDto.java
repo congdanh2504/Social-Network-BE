@@ -3,6 +3,7 @@ package com.example.social_network_fpt_be.models.dtos;
 import com.example.social_network_fpt_be.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Data
 @AllArgsConstructor
@@ -26,6 +27,8 @@ public class UserDto {
 
     private String description;
 
+    private String avt = "";
+
     public static UserDto toUserDto(User user) {
         return new UserDto(
                 user.getId(),
@@ -36,6 +39,7 @@ public class UserDto {
                 user.getPhone(),
                 user.getRole(),
                 user.getIsBlock(),
-                user.getDescription());
+                user.getDescription(),
+                null);
     }
 }
