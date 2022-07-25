@@ -3,10 +3,10 @@ package com.example.social_network_fpt_be.controller;
 import com.example.social_network_fpt_be.service.CommentService;
 import com.example.social_network_fpt_be.service.ImageService;
 import com.example.social_network_fpt_be.service.UserService;
-import com.google.api.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
