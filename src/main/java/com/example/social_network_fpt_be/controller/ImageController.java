@@ -56,7 +56,7 @@ public class ImageController {
         if (result.get("status").equals(0)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.get("message"));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(updateImage(id_image, imageFile, type, id));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(imageService.updateImage(id_image, imageFile, type, id));
         }
     }
 

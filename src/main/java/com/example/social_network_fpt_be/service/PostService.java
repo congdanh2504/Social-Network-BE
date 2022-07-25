@@ -50,7 +50,7 @@ public class PostService {
             }
             List<Hashtable<String, Object>> imageListAll = new ArrayList<>();
             Hashtable<String,Object> imageList = new Hashtable<>();
-            List<Object> images = imageService.findImageForPost("post_image", (int) postList.get("id_post"));
+            List<Object> images = imageService.findImageByTypeAndId("post_image", (int) postList.get("id_post"));
             for (Object image: images) {
                 imageList.put("id_image", ((Object[]) image)[0]);
                 imageList.put("url", ((Object[]) image)[1]);
@@ -85,7 +85,7 @@ public class PostService {
         }
         List<Hashtable<String, Object>> imageListAll = new ArrayList<>();
         Hashtable<String,Object> imageList = new Hashtable<>();
-        List<Object> images = imageService.findImageForPost("post_image", (int) postList.get("id_post"));
+        List<Object> images = imageService.findImageByTypeAndId("post_image", (int) postList.get("id_post"));
         for (Object image: images) {
             imageList.put("id_image", ((Object[]) image)[0]);
             imageList.put("url", ((Object[]) image)[1]);
@@ -132,7 +132,7 @@ public class PostService {
             videoService.deleteVideo(postOld.getPost_video());
         }
 
-        if (imageService.findImageForPost("video_image", id_post) != null){
+        if (imageService.findImageByTypeAndId("video_image", id_post) != null){
             imageService.deleteImageByTypeAndId("post_image", id_post);
         }
         if (post_image.get(0).getContentType() != null) {
