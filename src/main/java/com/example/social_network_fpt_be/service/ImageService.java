@@ -1,7 +1,7 @@
 package com.example.social_network_fpt_be.service;
 
 
-import com.example.social_network_fpt_be.model.Image;
+import com.example.social_network_fpt_be.models.Image;
 import com.example.social_network_fpt_be.repository.ImageRepository;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.*;

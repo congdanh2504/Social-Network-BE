@@ -1,6 +1,6 @@
 package com.example.social_network_fpt_be.repository;
 
-import com.example.social_network_fpt_be.model.User;
+import com.example.social_network_fpt_be.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

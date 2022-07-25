@@ -1,6 +1,6 @@
 package com.example.social_network_fpt_be.service;
 
-import com.example.social_network_fpt_be.model.Post;
+import com.example.social_network_fpt_be.models.Post;
 import com.example.social_network_fpt_be.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

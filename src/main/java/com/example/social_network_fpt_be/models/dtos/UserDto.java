@@ -1,11 +1,8 @@
-package com.example.social_network_fpt_be.DTO;
+package com.example.social_network_fpt_be.models.dtos;
 
-import com.example.social_network_fpt_be.model.User;
+import com.example.social_network_fpt_be.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import javax.persistence.Column;
-import javax.validation.constraints.Null;
 
 @Data
 @AllArgsConstructor

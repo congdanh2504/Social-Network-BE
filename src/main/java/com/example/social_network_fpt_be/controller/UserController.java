@@ -1,17 +1,12 @@
 package com.example.social_network_fpt_be.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.social_network_fpt_be.DTO.AuthUserDto;
-import com.example.social_network_fpt_be.DTO.UpdateUserDto;
-import com.example.social_network_fpt_be.DTO.UserDto;
-import com.example.social_network_fpt_be.model.User;
+import com.example.social_network_fpt_be.models.dtos.AuthUserDto;
+import com.example.social_network_fpt_be.models.dtos.UpdateUserDto;
+import com.example.social_network_fpt_be.models.dtos.UserDto;
+import com.example.social_network_fpt_be.models.User;
 import com.example.social_network_fpt_be.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -31,7 +26,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final Environment env;
 
     @GetMapping("profile")
     public ResponseEntity<UserDto> getUserById(Authentication authentication) {
@@ -59,7 +53,7 @@ public class UserController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<UserDto> register(@Valid @RequestBody AuthUserDto user) {
+    public ResponseEntity<?> register(@Valid @RequestBody AuthUserDto user) {
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(user.getPassword());
@@ -75,26 +69,13 @@ public class UserController {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
-                String secret = env.getProperty("secret");
-                String refresh_token = authorizationHeader.substring("Bearer ".length());
-                Algorithm algorithm = Algorithm.HMAC256(secret.getBytes());
-                JWTVerifier verifier = JWT.require(algorithm).build();
-                DecodedJWT decodedJWT = verifier.verify(refresh_token);
-                String username = decodedJWT.getSubject();
-                User user = userService.getUserByUsername(username);
-                final int timeMillisInTenMinutes = 1000 * 10 * 60;
-                String[] roles = {String.valueOf(user.getRole())};
-                String accessToken = JWT.create()
-                        .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + timeMillisInTenMinutes))
-                        .withIssuer(request.getRequestURI())
-                        .withClaim("role", Arrays.stream(roles).collect(Collectors.toList()))
-                        .sign(algorithm);
-                Map<String, String> tokens = new HashMap<>();
-                tokens.put("access_token", accessToken);
-                tokens.put("refresh_token", refresh_token);
+                String refreshToken = authorizationHeader.substring("Bearer ".length());
+                String [] tokens = userService.refreshToken(refreshToken);
+                Map<String, String> token = new HashMap<>();
+                token.put("access_token", tokens[0]);
+                token.put("refresh_token", tokens[1]);
                 response.setContentType("application/json");
-                new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+                new ObjectMapper().writeValue(response.getOutputStream(), token);
             } catch (Exception e) {
                 Map<String, String> error = new HashMap<>();
                 error.put("error", e.getMessage());
@@ -102,7 +83,6 @@ public class UserController {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 new ObjectMapper().writeValue(response.getOutputStream(), error);
             }
-
         } else {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }

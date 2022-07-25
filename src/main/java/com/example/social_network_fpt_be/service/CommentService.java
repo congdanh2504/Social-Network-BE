@@ -1,7 +1,6 @@
 package com.example.social_network_fpt_be.service;
 
-import com.example.social_network_fpt_be.model.Comment;
-import com.example.social_network_fpt_be.model.Image;
+import com.example.social_network_fpt_be.models.Comment;
 import com.example.social_network_fpt_be.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

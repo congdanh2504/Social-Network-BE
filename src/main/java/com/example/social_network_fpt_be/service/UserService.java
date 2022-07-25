@@ -1,13 +1,18 @@
 package com.example.social_network_fpt_be.service;
 
 
-import com.example.social_network_fpt_be.DTO.UpdateUserDto;
-import com.example.social_network_fpt_be.model.User;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.social_network_fpt_be.models.dtos.UpdateUserDto;
+import com.example.social_network_fpt_be.models.User;
 import com.example.social_network_fpt_be.repository.UserRepository;
 import com.example.social_network_fpt_be.util.Constraints;
 import com.google.api.client.util.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,6 +29,7 @@ import java.util.Optional;
 import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +39,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
+    private final Environment env;
 
     public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -80,6 +87,24 @@ public class UserService implements UserDetailsService {
         String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(temp).replaceAll("").replace('đ', 'd').replace('Đ', 'D');
+    }
+
+    public String[] refreshToken(String refreshToken) {
+        String secret = env.getProperty("secret");
+        Algorithm algorithm = Algorithm.HMAC256(secret.getBytes());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(refreshToken);
+        String username = decodedJWT.getSubject();
+        User user = getUserByUsername(username);
+        final int timeMillisInOneDay = 1000 * 60 * 60 * 24;
+        String[] roles = {String.valueOf(user.getRole())};
+        String accessToken = JWT.create()
+                .withSubject(user.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + timeMillisInOneDay))
+                .withIssuer("/api/v1/users/refresh-token")
+                .withClaim("role", Arrays.stream(roles).collect(Collectors.toList()))
+                .sign(algorithm);
+        return new String[]{accessToken, refreshToken};
     }
 
     @Override

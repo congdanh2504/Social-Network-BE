@@ -1,9 +1,8 @@
 package com.example.social_network_fpt_be.controller;
 
 
-import com.example.social_network_fpt_be.model.Image;
+import com.example.social_network_fpt_be.models.Image;
 import com.example.social_network_fpt_be.service.ImageService;
-import com.google.protobuf.Enum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +13,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Objects;
-
-import static com.example.social_network_fpt_be.config.Setting.MAX_SIZE;
 
 @RestController
 @RequestMapping(path = "/api/v1/image")
