@@ -104,8 +104,21 @@ public class ImageService {
     }
 
     public String getAvatarByUser(Long userId) {
-        Image image = imageRepository.getAvatarByUser(userId);
-        return image.getUrl();
+        try {
+            Image image = imageRepository.getAvatarByUser(userId);
+            return image.getUrl();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public String getCoverImageByUser(Long userId) {
+        try {
+            Image image = imageRepository.getCoverImageByUser(userId);
+            return image.getUrl();
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     public Hashtable<String, Object> checkFile(MultipartFile imageFile) {

@@ -1,4 +1,4 @@
-package com.example.social_network_fpt_be.controller;
+package com.example.social_network_fpt_be.models.controller;
 
 import com.example.social_network_fpt_be.service.ImageService;
 import com.example.social_network_fpt_be.service.PostService;

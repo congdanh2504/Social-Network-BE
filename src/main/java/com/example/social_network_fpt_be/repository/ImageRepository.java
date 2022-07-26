@@ -17,4 +17,7 @@ public interface ImageRepository extends JpaRepository<Image, Long>{
 
     @Query("SELECT i FROM Image i WHERE i.type = 'user_avt' AND i.id = :userId")
     Image getAvatarByUser(Long userId);
+
+    @Query("SELECT i FROM Image i WHERE i.type = 'user_cover' AND i.id = :userId")
+    Image getCoverImageByUser(Long userId);
 }
