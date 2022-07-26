@@ -47,8 +47,16 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    public List<UserDto> getUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserDto> result = new ArrayList<>();
+        users.forEach((user) -> {
+            UserDto userDto = UserDto.toUserDto(user);
+            String avt = imageService.getAvatarByUser(user.getId());
+            userDto.setAvt(avt);
+            result.add(userDto);
+        });
+        return result;
     }
 
     public User getUserByUsername(String username) {
@@ -68,7 +76,7 @@ public class UserService implements UserDetailsService {
         return user.get();
     }
 
-    public User updateUser(UpdateUserDto updateUser, String username) throws IOException {
+    public UserDto updateUser(UpdateUserDto updateUser, String username) throws IOException {
         User currentUser = getUserByUsername(username);
         if (updateUser.getAvtImage() != null) {
             imageService.createImage(updateUser.getAvtImage(), Constraints.USER_AVT, currentUser.getId());
@@ -80,16 +88,26 @@ public class UserService implements UserDetailsService {
         currentUser.setLastName(updateUser.getLastName());
         currentUser.setPhone(updateUser.getPhone());
         currentUser.setDescription(updateUser.getDescription());
-        return userRepository.save(currentUser);
+        UserDto userDto = UserDto.toUserDto(userRepository.save(currentUser));
+        String avt = imageService.getAvatarByUser(currentUser.getId());
+        userDto.setAvt(avt);
+        return userDto;
     }
 
-    public List<User> searchByUsername(String name) {
+    public List<UserDto> searchByUsername(String name) {
         String[] words = name.split(" ");
         Set<User> distinctUsers = new HashSet<>();
         Arrays.stream(words).forEach((word) -> {
             distinctUsers.addAll(userRepository.searchByUsername(removeAccent(word)));
         });
-        return Lists.newArrayList(distinctUsers);
+        List<UserDto> result = new ArrayList<>();
+        distinctUsers.forEach((user) -> {
+            UserDto userDto = UserDto.toUserDto(user);
+            String avt = imageService.getAvatarByUser(user.getId());
+            userDto.setAvt(avt);
+            result.add(userDto);
+        });
+        return result;
     }
 
     private String removeAccent(String s) {

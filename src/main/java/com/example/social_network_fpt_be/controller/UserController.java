@@ -1,4 +1,4 @@
-package com.example.social_network_fpt_be.models.controller;
+package com.example.social_network_fpt_be.controller;
 
 import com.example.social_network_fpt_be.models.dtos.AuthUserDto;
 import com.example.social_network_fpt_be.models.dtos.UpdateUserDto;
@@ -34,7 +34,7 @@ public class UserController {
 
     @GetMapping("search")
     public ResponseEntity<List<UserDto>> searchUsers(@RequestParam String username) {
-        return ResponseEntity.ok().body(userService.searchByUsername(username).stream().map(UserDto::toUserDto).collect(Collectors.toList()));
+        return ResponseEntity.ok().body(userService.searchByUsername(username));
     }
 
     @GetMapping("{id}")
