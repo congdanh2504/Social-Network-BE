@@ -7,7 +7,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class AuthUserDto {
+public class AuthUserRequest {
     @NotBlank
     private String username;
     @NotBlank

@@ -40,21 +40,20 @@ public class PostController {
     }
 
     @PostMapping(path = "", consumes = "multipart/form-data")
-    public ResponseEntity<Object> createPost(@RequestPart("post_video") MultipartFile post_video,
-                                             @RequestPart("post_image") List<MultipartFile> post_image,
+    public ResponseEntity<Object> createPost(@RequestPart("post_image") List<MultipartFile> post_image,
                                              Authentication authentication,
                                              @RequestParam("title") String title,
                                              @RequestParam("description") String description) throws IOException {
         Long id_user = userService.getUserByUsername(authentication.getName()).getId();
-        if (post_video.getContentType() != null) {
-            Hashtable<String, Object> checkVideo = videoService.checkFile(post_video);
-            if (checkVideo.get("status").equals(0)) {
-                if (checkVideo.get("message").equals("Video file is empty")) {
-                } else {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(checkVideo.get("message"));
-                }
-            }
-        }
+//        if (post_video.getContentType() != null) {
+//            Hashtable<String, Object> checkVideo = videoService.checkFile(post_video);
+//            if (checkVideo.get("status").equals(0)) {
+//                if (checkVideo.get("message").equals("Video file is empty")) {
+//                } else {
+//                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(checkVideo.get("message"));
+//                }
+//            }
+//        }
         if (post_image.get(0).getContentType() != null) {
             for (MultipartFile multipartFile : post_image) {
                 Hashtable<String, Object> checkImage = imageService.checkFile(multipartFile);
@@ -66,7 +65,7 @@ public class PostController {
                 }
             }
         }
-        return ResponseEntity.status(HttpStatus.OK).body(postService.createPost(post_video, post_image, id_user, title, description));
+        return ResponseEntity.status(HttpStatus.OK).body(postService.createPost(post_image, id_user, title, description));
     }
 
     @PutMapping(path = "{id_post}")

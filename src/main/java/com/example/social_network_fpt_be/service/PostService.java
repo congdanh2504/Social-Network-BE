@@ -98,24 +98,24 @@ public class PostService {
         return postList;
     }
 
-    public Hashtable<String, Object> createPost(MultipartFile post_video, List<MultipartFile> post_image, Long id_user, String title, String description) throws IOException {
-        Long id_video = null;
-        if (post_video.getContentType() != null) {
-            id_video = videoService.createVideo(post_video).getId_video();
-        }
+    public Post createPost(List<MultipartFile> post_image, Long id_user, String title, String description) throws IOException {
+//        Long id_video = null;
+//        if (post_video.getContentType() != null) {
+//            id_video = videoService.createVideo(post_video).getId_video();
+//        }
         Post post = new Post();
         post.setId_user(id_user);
         post.setTitle(title);
         post.setDescription(description);
         post.setCreate_date(LocalDateTime.now());
-        post.setPost_video(id_video);
         postRepository.save(post);
+        System.out.println(post);
         for (MultipartFile multipartFile: post_image){
             if (multipartFile.getContentType() != null) {
                 imageService.createImage(multipartFile, "post_image", post.getId_post());
             }
         }
-        return getPostByID(post.getId_post());
+        return post;
     }
 
     public Hashtable<String, Object> updatePost(Long id_post, MultipartFile post_video, List<MultipartFile> post_image, Long id_user, String title, String description) throws IOException {

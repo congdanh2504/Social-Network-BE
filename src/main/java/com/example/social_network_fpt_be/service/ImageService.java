@@ -33,6 +33,7 @@ public class ImageService {
 
     public Image createImage(MultipartFile imageFile, String type, Long id) throws IOException {
         String url = uploadImage(imageFile);
+        System.out.println(url);
         Image image = new Image();
         image.setUrl(url);
         image.setCreate_date(LocalDateTime.now());

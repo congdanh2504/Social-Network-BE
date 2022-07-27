@@ -1,6 +1,7 @@
 package com.example.social_network_fpt_be.controller;
 
-import com.example.social_network_fpt_be.models.dtos.AuthUserDto;
+import com.example.social_network_fpt_be.models.dtos.AuthUserRequest;
+import com.example.social_network_fpt_be.models.dtos.PostRequest;
 import com.example.social_network_fpt_be.models.dtos.UpdateUserDto;
 import com.example.social_network_fpt_be.models.dtos.UserDto;
 import com.example.social_network_fpt_be.models.User;
@@ -19,7 +20,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/users")
@@ -47,13 +47,19 @@ public class UserController {
         return ResponseEntity.ok().body(userService.updateUser(updateUser, authentication.getName()));
     }
 
+    @PostMapping(path = "/post", consumes = "multipart/form-data")
+    public ResponseEntity<?> createPost(@Valid @ModelAttribute PostRequest postDto, Authentication authentication) throws IOException {
+
+        return ResponseEntity.ok().body(userService.createPost(postDto, authentication.getName()));
+    }
+
     @GetMapping("")
     public ResponseEntity<List<UserDto>> getUsers() {
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
     @PostMapping("register")
-    public ResponseEntity<?> register(@Valid @RequestBody AuthUserDto user) {
+    public ResponseEntity<?> register(@Valid @RequestBody AuthUserRequest user) {
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(user.getPassword());

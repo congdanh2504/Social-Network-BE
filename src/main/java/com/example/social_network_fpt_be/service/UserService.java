@@ -5,12 +5,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.social_network_fpt_be.models.Post;
+import com.example.social_network_fpt_be.models.dtos.PostRequest;
 import com.example.social_network_fpt_be.models.dtos.UpdateUserDto;
 import com.example.social_network_fpt_be.models.User;
 import com.example.social_network_fpt_be.models.dtos.UserDto;
 import com.example.social_network_fpt_be.repository.UserRepository;
 import com.example.social_network_fpt_be.util.Constraints;
-import com.google.api.client.util.Lists;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -40,6 +41,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
+    private final PostService postService;
     private final Environment env;
 
     public User saveUser(User user) {
@@ -92,6 +94,11 @@ public class UserService implements UserDetailsService {
         String avt = imageService.getAvatarByUser(currentUser.getId());
         userDto.setAvt(avt);
         return userDto;
+    }
+
+    public Post createPost(PostRequest postDto, String username) throws IOException {
+        User user = getUserByUsername(username);
+        return postService.createPost(postDto.getPost_image(), user.getId(), postDto.getTitle(), postDto.getDescription());
     }
 
     public List<UserDto> searchByUsername(String name) {
