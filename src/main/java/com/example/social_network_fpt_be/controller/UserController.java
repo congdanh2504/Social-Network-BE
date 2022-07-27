@@ -44,12 +44,12 @@ public class UserController {
 
     @PutMapping(path = "", consumes = "multipart/form-data")
     public ResponseEntity<UserDto> updateUser(@Valid @ModelAttribute UpdateUserDto updateUser, Authentication authentication) throws IOException {
-        return ResponseEntity.ok().body(UserDto.toUserDto(userService.updateUser(updateUser, authentication.getName())));
+        return ResponseEntity.ok().body(userService.updateUser(updateUser, authentication.getName()));
     }
 
     @GetMapping("")
     public ResponseEntity<List<UserDto>> getUsers() {
-        return ResponseEntity.ok().body(userService.getUsers().stream().map(UserDto::toUserDto).collect(Collectors.toList()));
+        return ResponseEntity.ok().body(userService.getUsers());
     }
 
     @PostMapping("register")
