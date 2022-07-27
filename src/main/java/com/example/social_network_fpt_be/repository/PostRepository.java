@@ -13,7 +13,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             value = "SELECT p.id_post, p.id_user, p.title, p.description, p.create_date, p.post_video, v.url " +
                     "FROM Post p " +
                     "LEFT JOIN Video v " +
-                    "ON p.post_video = v.id_video ",
+                    "ON p.post_video = v.id_video " +
+                    "ORDER BY p.create_date desc",
             nativeQuery = true)
     List<Object> getAllPost();
 
