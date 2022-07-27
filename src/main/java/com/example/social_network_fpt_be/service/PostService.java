@@ -1,8 +1,10 @@
 package com.example.social_network_fpt_be.service;
 
 import com.example.social_network_fpt_be.models.Post;
+import com.example.social_network_fpt_be.models.User;
 import com.example.social_network_fpt_be.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +28,10 @@ public class PostService {
     @Autowired
     private VideoService videoService;
 
+    @Autowired
+    @Lazy
+    private UserService userService;
+
 
     public List<Hashtable<String, Object>> getPostList() {
         List<Hashtable<String, Object>> result = new ArrayList<>();
@@ -37,7 +43,16 @@ public class PostService {
             // output the first value in posts
             Hashtable<String, Object> postList = new Hashtable<>();
             postList.put("id_post", ((Object[]) post)[0]);
-            postList.put("id_user", ((Object[]) post)[1]);
+//            postList.put("id_user", ((Object[]) post)[1]);
+            Hashtable<String, Object> userMap = new Hashtable<>();
+            User user = userService.getUserById(Long.parseLong(String.valueOf(((Object[]) post)[1])));
+            userMap.put("id", user.getId());
+            userMap.put("email", user.getEmail());
+            userMap.put("username", user.getUsername());
+            userMap.put("firstName", user.getFirstName());
+            userMap.put("lastName", user.getLastName());
+            userMap.put("avt", imageService.getAvatarByUser(user.getId()));
+            postList.put("user", userMap);
             postList.put("title", ((Object[]) post)[2]);
             postList.put("description", ((Object[]) post)[3]);
             postList.put("create_date", ((Object[]) post)[4]);
@@ -50,7 +65,7 @@ public class PostService {
             }
             List<Hashtable<String, Object>> imageListAll = new ArrayList<>();
             Hashtable<String,Object> imageList = new Hashtable<>();
-            List<Object> images = imageService.findImageByTypeAndId("post_image", (Long) postList.get("id_post"));
+            List<Object> images = imageService.findImageByTypeAndId("post_image", Long.parseLong(String.valueOf(postList.get("id_post"))));
             for (Object image: images) {
                 imageList.put("id_image", ((Object[]) image)[0]);
                 imageList.put("url", ((Object[]) image)[1]);
@@ -85,7 +100,7 @@ public class PostService {
         }
         List<Hashtable<String, Object>> imageListAll = new ArrayList<>();
         Hashtable<String,Object> imageList = new Hashtable<>();
-        List<Object> images = imageService.findImageByTypeAndId("post_image", (Long) postList.get("id_post"));
+        List<Object> images = imageService.findImageByTypeAndId("post_image", Long.parseLong(String.valueOf(postList.get("id_post"))));
         for (Object image: images) {
             imageList.put("id_image", ((Object[]) image)[0]);
             imageList.put("url", ((Object[]) image)[1]);
@@ -109,7 +124,8 @@ public class PostService {
         post.setDescription(description);
         post.setCreate_date(LocalDateTime.now());
         postRepository.save(post);
-        System.out.println(post);
+//        System.out.println(post);
+//        System.out.println(post_image.size());
         for (MultipartFile multipartFile: post_image){
             if (multipartFile.getContentType() != null) {
                 imageService.createImage(multipartFile, "post_image", post.getId_post());

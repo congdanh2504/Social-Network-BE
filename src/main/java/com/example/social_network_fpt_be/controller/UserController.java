@@ -49,7 +49,7 @@ public class UserController {
 
     @PostMapping(path = "/post", consumes = "multipart/form-data")
     public ResponseEntity<?> createPost(@Valid @ModelAttribute PostRequest postDto, Authentication authentication) throws IOException {
-
+        System.out.println(postDto.getPost_image().size());
         return ResponseEntity.ok().body(userService.createPost(postDto, authentication.getName()));
     }
 
