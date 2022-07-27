@@ -108,6 +108,7 @@ public class ImageService {
             Image image = imageRepository.getAvatarByUser(userId);
             return image.getUrl();
         } catch (Exception e) {
+            System.out.println("null");
             return "";
         }
     }
