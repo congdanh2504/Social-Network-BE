@@ -40,6 +40,6 @@ public class UserDto {
                 user.getRole(),
                 user.getIsBlock(),
                 user.getDescription(),
-                null);
+                "");
     }
 }

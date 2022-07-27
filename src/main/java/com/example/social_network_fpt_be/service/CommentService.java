@@ -18,10 +18,14 @@ import java.util.Optional;
 @Transactional
 public class CommentService {
 
+    private final CommentRepository commentRepository;
+    private final ImageService imageService;
+
     @Autowired
-    private CommentRepository commentRepository;
-    @Autowired
-    private ImageService imageService;
+    public CommentService(CommentRepository commentRepository, ImageService imageService) {
+        this.commentRepository = commentRepository;
+        this.imageService = imageService;
+    }
 
     public List<Hashtable<String, Object>> getAllComments() {
         try {

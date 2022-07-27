@@ -6,12 +6,12 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.social_network_fpt_be.models.Post;
-import com.example.social_network_fpt_be.models.dtos.PostRequest;
+import com.example.social_network_fpt_be.models.dtos.PostDto;
 import com.example.social_network_fpt_be.models.dtos.UpdateUserDto;
 import com.example.social_network_fpt_be.models.User;
 import com.example.social_network_fpt_be.models.dtos.UserDto;
 import com.example.social_network_fpt_be.repository.UserRepository;
-import com.example.social_network_fpt_be.util.Constraints;
+import com.example.social_network_fpt_be.util.ImageType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -81,10 +81,10 @@ public class UserService implements UserDetailsService {
     public UserDto updateUser(UpdateUserDto updateUser, String username) throws IOException {
         User currentUser = getUserByUsername(username);
         if (updateUser.getAvtImage() != null) {
-            imageService.createImage(updateUser.getAvtImage(), Constraints.USER_AVT, currentUser.getId());
+            imageService.createImage(updateUser.getAvtImage(), ImageType.USER_AVT.toString(), currentUser.getId());
         }
         if (updateUser.getCoverImage() != null) {
-            imageService.createImage(updateUser.getCoverImage(), Constraints.USER_COVER, currentUser.getId());
+            imageService.createImage(updateUser.getCoverImage(), ImageType.USER_COVER.toString(), currentUser.getId());
         }
         currentUser.setFirstName(updateUser.getFirstName());
         currentUser.setLastName(updateUser.getLastName());
@@ -96,7 +96,7 @@ public class UserService implements UserDetailsService {
         return userDto;
     }
 
-    public Post createPost(PostRequest postDto, String username) throws IOException {
+    public Post createPost(PostDto postDto, String username) throws IOException {
         User user = getUserByUsername(username);
         return postService.createPost(postDto.getPost_image(), user.getId(), postDto.getTitle(), postDto.getDescription());
     }

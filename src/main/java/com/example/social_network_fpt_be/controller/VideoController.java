@@ -16,8 +16,12 @@ import java.util.List;
 @RequestMapping(path = "/api/v1/video")
 public class VideoController {
 
+    private final VideoService videoService;
+
     @Autowired
-    private VideoService videoService;
+    public VideoController(VideoService videoService) {
+        this.videoService = videoService;
+    }
 
     @GetMapping(path = "")
     public ResponseEntity<List<Video>> getVideoList() {

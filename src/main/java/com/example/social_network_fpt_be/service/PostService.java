@@ -19,18 +19,22 @@ import java.util.List;
 @Transactional
 public class PostService {
 
-    @Autowired
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
-    @Autowired
-    private ImageService imageService;
+    private final ImageService imageService;
 
-    @Autowired
-    private VideoService videoService;
+    private final VideoService videoService;
 
-    @Autowired
     @Lazy
-    private UserService userService;
+    private final UserService userService;
+
+    @Autowired
+    public PostService(PostRepository postRepository, ImageService imageService, VideoService videoService, UserService userService) {
+        this.postRepository = postRepository;
+        this.imageService = imageService;
+        this.videoService = videoService;
+        this.userService = userService;
+    }
 
 
     public List<Hashtable<String, Object>> getPostList() {
@@ -64,17 +68,19 @@ public class PostService {
                 postList.put("url_video", "");
             }
             List<Hashtable<String, Object>> imageListAll = new ArrayList<>();
-            Hashtable<String,Object> imageList = new Hashtable<>();
+
             List<Object> images = imageService.findImageByTypeAndId("post_image", Long.parseLong(String.valueOf(postList.get("id_post"))));
             for (Object image: images) {
+                Hashtable<String,Object> imageList = new Hashtable<>();
                 imageList.put("id_image", ((Object[]) image)[0]);
                 imageList.put("url", ((Object[]) image)[1]);
                 imageList.put("create_date", ((Object[]) image)[2]);
                 imageList.put("type", ((Object[]) image)[3]);
                 imageList.put("id", ((Object[]) image)[4]);
+//                System.out.println(imageList);
                 imageListAll.add(imageList);
-                postList.put("image_list", imageListAll);
             }
+            postList.put("image_list", imageListAll);
             result.add(postList);
         }
         return result;
@@ -124,8 +130,6 @@ public class PostService {
         post.setDescription(description);
         post.setCreate_date(LocalDateTime.now());
         postRepository.save(post);
-//        System.out.println(post);
-//        System.out.println(post_image.size());
         for (MultipartFile multipartFile: post_image){
             if (multipartFile.getContentType() != null) {
                 imageService.createImage(multipartFile, "post_image", post.getId_post());

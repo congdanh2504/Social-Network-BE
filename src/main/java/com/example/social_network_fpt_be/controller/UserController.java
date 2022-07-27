@@ -1,7 +1,8 @@
 package com.example.social_network_fpt_be.controller;
 
-import com.example.social_network_fpt_be.models.dtos.AuthUserRequest;
-import com.example.social_network_fpt_be.models.dtos.PostRequest;
+import com.example.social_network_fpt_be.models.Post;
+import com.example.social_network_fpt_be.models.dtos.AuthUserDto;
+import com.example.social_network_fpt_be.models.dtos.PostDto;
 import com.example.social_network_fpt_be.models.dtos.UpdateUserDto;
 import com.example.social_network_fpt_be.models.dtos.UserDto;
 import com.example.social_network_fpt_be.models.User;
@@ -48,7 +49,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/post", consumes = "multipart/form-data")
-    public ResponseEntity<?> createPost(@Valid @ModelAttribute PostRequest postDto, Authentication authentication) throws IOException {
+    public ResponseEntity<Post> createPost(@Valid @ModelAttribute PostDto postDto, Authentication authentication) throws IOException {
         System.out.println(postDto.getPost_image().size());
         return ResponseEntity.ok().body(userService.createPost(postDto, authentication.getName()));
     }
@@ -59,7 +60,7 @@ public class UserController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<?> register(@Valid @RequestBody AuthUserRequest user) {
+    public ResponseEntity<UserDto> register(@Valid @RequestBody AuthUserDto user) {
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(user.getPassword());
