@@ -25,11 +25,10 @@ public class PostService {
 
     private final VideoService videoService;
 
-    @Lazy
     private final UserService userService;
 
     @Autowired
-    public PostService(PostRepository postRepository, ImageService imageService, VideoService videoService, UserService userService) {
+    public PostService(PostRepository postRepository, ImageService imageService, VideoService videoService,@Lazy UserService userService) {
         this.postRepository = postRepository;
         this.imageService = imageService;
         this.videoService = videoService;
@@ -130,6 +129,8 @@ public class PostService {
         post.setDescription(description);
         post.setCreate_date(LocalDateTime.now());
         postRepository.save(post);
+//        System.out.println(post);
+//        System.out.println(post_image.size());
         for (MultipartFile multipartFile: post_image){
             if (multipartFile.getContentType() != null) {
                 imageService.createImage(multipartFile, "post_image", post.getId_post());
