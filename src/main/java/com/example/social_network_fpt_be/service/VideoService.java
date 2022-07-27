@@ -22,8 +22,12 @@ import static com.example.social_network_fpt_be.config.Setting.*;
 @Service
 @Transactional
 public class VideoService {
+    private final VideoRepository videoRepository;
+
     @Autowired
-    private VideoRepository videoRepository;
+    public VideoService(VideoRepository videoRepository) {
+        this.videoRepository = videoRepository;
+    }
 
     public List<Video> getVideoList() {
         return videoRepository.findAll();

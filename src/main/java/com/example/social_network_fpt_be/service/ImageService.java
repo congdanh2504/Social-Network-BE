@@ -20,8 +20,12 @@ import static com.example.social_network_fpt_be.config.Setting.*;
 @Service
 @Transactional
 public class ImageService {
+    private final ImageRepository imageRepository;
+
     @Autowired
-    private ImageRepository imageRepository;
+    public ImageService(ImageRepository imageRepository) {
+        this.imageRepository = imageRepository;
+    }
 
     public List<Image> getImageList() {
         return imageRepository.findAll();
