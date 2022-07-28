@@ -87,6 +87,7 @@ public class PostService {
 
     public Hashtable<String, Object> getPostByID(Long id_post) {
         Hashtable<String, Object> postList = new Hashtable<>();
+        Hashtable<String, Object> userMap = new Hashtable<>();
         Object post = postRepository.getPostBy(id_post);
         if (post == null){
             return null;
@@ -95,6 +96,7 @@ public class PostService {
         postList.put("id_user", ((Object[]) post)[1]);
         postList.put("title", ((Object[]) post)[2]);
         postList.put("description", ((Object[]) post)[3]);
+        postList.put("user", userMap);
         postList.put("create_date", ((Object[]) post)[4]);
         if (((Object[]) post)[5] != null) {
             postList.put("post_video", ((Object[]) post)[5]);
