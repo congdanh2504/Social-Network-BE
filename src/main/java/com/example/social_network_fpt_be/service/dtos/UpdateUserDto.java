@@ -1,4 +1,4 @@
-package com.example.social_network_fpt_be.service.dtos;
+package com.example.social_network_fpt_be.models.dtos;
 
 import lombok.Data;
 import org.springframework.format.annotation.NumberFormat;
