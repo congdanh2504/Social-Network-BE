@@ -50,7 +50,6 @@ public class UserController {
 
     @PostMapping(path = "/post", consumes = "multipart/form-data")
     public ResponseEntity<Post> createPost(@Valid @ModelAttribute PostDto postDto, Authentication authentication) throws IOException {
-        System.out.println(postDto.getPost_image().size());
         return ResponseEntity.ok().body(userService.createPost(postDto, authentication.getName()));
     }
 
