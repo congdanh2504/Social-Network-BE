@@ -16,4 +16,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("SELECT c FROM Comment c WHERE c.id_comment_father is null")
     List<Comment> getCommentRoot();
 
+    @Query("SELECT c FROM Comment c WHERE c.id_post = :id_post")
+    List<Comment> getCommentByPostId(Long id_post);
+
 }
