@@ -1,17 +1,14 @@
 package com.example.social_network_fpt_be.service;
 
-import ch.qos.logback.classic.pattern.SyslogStartConverter;
 import com.example.social_network_fpt_be.models.Follow;
-import com.example.social_network_fpt_be.models.Image;
-import com.example.social_network_fpt_be.models.MyKey;
+import com.example.social_network_fpt_be.models.FollowKey;
 import com.example.social_network_fpt_be.repository.FollowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -45,7 +42,7 @@ public class FollowService {
 
     public Follow createFollow(Long id_user_follow, Long id_user_followed){
         try {
-            Follow follow = new Follow(new MyKey(id_user_follow, id_user_followed));
+            Follow follow = new Follow(new FollowKey(id_user_follow, id_user_followed));
             followRepository.save(follow);
             return follow;
         } catch (Exception e) {
@@ -53,9 +50,11 @@ public class FollowService {
             return null;
         }
     }
-
+    @Transactional
     public String deleteFollow(Long id_user_follow, Long id_user_followed) {
         try{
+            System.out.println("id_user_follow "+id_user_follow);
+            System.out.println("id_user_followed "+id_user_followed);
             followRepository.deleteFollow(id_user_follow, id_user_followed);
             return "success";
         } catch (Exception e) {

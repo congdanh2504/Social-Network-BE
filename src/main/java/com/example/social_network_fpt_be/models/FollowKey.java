@@ -16,12 +16,12 @@ public class FollowKey implements Serializable {
     @Column(name = "id_user_followed", nullable = false)
     private Long id_user_followed;
 
-    public MyKey(Long id_user_follow, Long id_user_followed) {
+    public FollowKey(Long id_user_follow, Long id_user_followed) {
         this.id_user_follow = id_user_follow;
         this.id_user_followed = id_user_followed;
     }
 
-    public MyKey() {
+    public FollowKey() {
 
     }
 }

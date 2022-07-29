@@ -1,6 +1,7 @@
 package com.example.social_network_fpt_be.repository;
 
 import com.example.social_network_fpt_be.models.Follow;
+import com.example.social_network_fpt_be.models.FollowKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,5 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
             "INNER JOIN Follow f2 " +
             "ON f1.myKey.id_user_follow = f2.myKey.id_user_followed and f1.myKey.id_user_followed = f2.myKey.id_user_follow")
     List<Object> getListFriend();
+
 }
