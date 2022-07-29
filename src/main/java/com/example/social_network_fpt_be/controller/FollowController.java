@@ -31,13 +31,7 @@ public class FollowController {
         return ResponseEntity.status(HttpStatus.OK).body(followService.createFollow(follow));
     }
 
-    @PutMapping(path = "/{id_follow}")
-    public ResponseEntity<Follow> updateFollow(@PathVariable Long id_follow,@RequestBody Follow follow){
-        return ResponseEntity.status(HttpStatus.OK).body(followService.updateFollow(id_follow, follow));
-    }
-
     @DeleteMapping(path = "")
-    @PostMapping(path = "")
     public ResponseEntity<String> deleteFollow(@RequestBody Follow follow){
         String result = followService.deleteFollow(follow);
         if (result.equals("success")) {
@@ -47,15 +41,15 @@ public class FollowController {
         }
     }
 
-    @GetMapping(path= "/{id_user_follow}")
-    public ResponseEntity<List<Follow>> getListFriendUser(@PathVariable Long id_user_follow){
-        return ResponseEntity.status(HttpStatus.OK).body(followService.getListFriendUser(id_user_follow));
-    }
-
-    @GetMapping(path= "/")
-    public ResponseEntity<List<Follow>> getListFriend(){
-        return ResponseEntity.status(HttpStatus.OK).body(followService.getListFriend());
-    }
+//    @GetMapping(path= "/{id_user_follow}")
+//    public ResponseEntity<List<Follow>> getListFriendUser(@PathVariable Long id_user_follow){
+//        return ResponseEntity.status(HttpStatus.OK).body(followService.getListFriendUser(id_user_follow));
+//    }
+//
+//    @GetMapping(path= "/")
+//    public ResponseEntity<List<Follow>> getListFriend(){
+//        return ResponseEntity.status(HttpStatus.OK).body(followService.getListFriend());
+//    }
 
     @GetMapping(path= "/isFriend")
     public ResponseEntity<Boolean> isFriend(@RequestBody Follow follow){

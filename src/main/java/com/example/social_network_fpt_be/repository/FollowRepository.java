@@ -10,18 +10,15 @@ import java.util.List;
 @Repository
 public interface FollowRepository extends JpaRepository<Follow, Long> {
 
-    @Query("SELECT f.id_user_follow, f.id_user_followed FROM Follow f WHERE f.id_user_follow = ?1")
+    @Query("SELECT f.myKey.id_user_follow, f.myKey.id_user_followed FROM Follow f WHERE f.myKey.id_user_follow = ?1")
     List<Follow> getFollowUser(Long id_user_follow);
 
-    @Query("SELECT f FROM Follow f WHERE f.id_follow = ?1")
-    Follow getFollowId(Long id_follow);
-
-    @Query("DELETE FROM Follow f WHERE f.id_user_follow = ?1 and f.id_user_followed = ?2")
+    @Query("DELETE FROM Follow f WHERE f.myKey.id_user_follow = ?1 and f.myKey.id_user_followed = ?2")
     void deleteFollow(Long id_user_follow, Long id_user_followed);
 
-    @Query("SELECT f1.id_user_follow = f2.id_user_followed\n" +
-            "FROM follow f1\n" +
-            "INNER JOIN follow f2 \n" +
-            "ON f1.id_user_follow = f2.id_user_followed and f1.id_user_followed = f2.id_user_follow\n")
+    @Query("SELECT f1.myKey.id_user_follow, f2.myKey.id_user_followed " +
+            "FROM Follow f1 " +
+            "INNER JOIN Follow f2 " +
+            "ON f1.myKey.id_user_follow = f2.myKey.id_user_followed and f1.myKey.id_user_followed = f2.myKey.id_user_follow")
     List<Follow> getListFriend();
 }

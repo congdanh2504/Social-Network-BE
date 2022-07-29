@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "follow")
@@ -12,9 +13,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Follow {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_follow;
-    private Long id_user_follow;
-    private Long id_user_followed;
+    @EmbeddedId
+    private MyKey myKey;
 }
+
+

@@ -39,6 +39,11 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPostByID(id_post));
     }
 
+    @GetMapping(path = "five-latest-posts")
+    public ResponseEntity<List<Hashtable<String, Object>>> getFiveLatestPosts() {
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getFiveLatestPosts());
+    }
+
     @PostMapping(path = "", consumes = "multipart/form-data")
     public ResponseEntity<Object> createPost(@RequestPart("post_image") List<MultipartFile> post_image,
                                              Authentication authentication,

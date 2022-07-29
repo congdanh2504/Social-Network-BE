@@ -18,6 +18,7 @@ import java.util.Objects;
 @Service
 @Transactional
 public class FollowService {
+
     private final FollowRepository followRepository;
 
     @Autowired
@@ -53,22 +54,9 @@ public class FollowService {
         }
     }
 
-    public Follow updateFollow(Long id_follow, Follow follow)  {
-        try {
-            Follow newFollow = followRepository.getFollowId(id_follow);
-            newFollow.setId_user_follow(follow.getId_user_follow());
-            newFollow.setId_user_followed(follow.getId_user_followed());
-            followRepository.save(newFollow);
-            return follow;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
-    }
-
     public String deleteFollow(Follow follow) {
         try{
-            followRepository.deleteFollow(follow.getId_user_follow(), follow.getId_user_followed());
+            followRepository.deleteFollow(follow.getMyKey().getId_user_follow(), follow.getMyKey().getId_user_followed());
             return "success";
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,7 +78,7 @@ public class FollowService {
             List<Follow> follow = followRepository.getListFriend();
             List<Follow> result = new ArrayList<>();
             for (Follow fl : follow){
-                if (Objects.equals(fl.getId_user_follow(), id_user_follow)) {
+                if (Objects.equals(fl.getMyKey().getId_user_follow(), id_user_follow)) {
                     result.add(fl);
                 }
             }
@@ -105,7 +93,7 @@ public class FollowService {
         try{
             List<Follow> getFollow = followRepository.getListFriend();
             for (Follow fl : getFollow){
-                if (Objects.equals(fl.getId_user_follow(), follow.getId_user_follow()) && Objects.equals(fl.getId_user_followed(), follow.getId_user_followed())){
+                if (Objects.equals(fl.getMyKey().getId_user_follow(), follow.getMyKey().getId_user_follow()) && Objects.equals(fl.getMyKey().getId_user_followed(), follow.getMyKey().getId_user_followed())){
                     return true;
                 }
             }

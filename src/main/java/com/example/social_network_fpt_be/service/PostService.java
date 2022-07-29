@@ -35,10 +35,18 @@ public class PostService {
         this.userService = userService;
     }
 
-
     public List<Hashtable<String, Object>> getPostList() {
-        List<Hashtable<String, Object>> result = new ArrayList<>();
         List<Object> posts = postRepository.getAllPost();
+        return getPostDetail(posts);
+    }
+
+    public List<Hashtable<String, Object>> getFiveLatestPosts() {
+        List<Object> posts = postRepository.getFiveLatestPosts();
+        return getPostDetail(posts);
+    }
+
+    private List<Hashtable<String, Object>> getPostDetail(List<Object> posts) {
+        List<Hashtable<String, Object>> result = new ArrayList<>();
         if (posts == null){
             return null;
         }
@@ -46,7 +54,6 @@ public class PostService {
             // output the first value in posts
             Hashtable<String, Object> postList = new Hashtable<>();
             postList.put("id_post", ((Object[]) post)[0]);
-//            postList.put("id_user", ((Object[]) post)[1]);
             Hashtable<String, Object> userMap = new Hashtable<>();
             User user = userService.getUserById(Long.parseLong(String.valueOf(((Object[]) post)[1])));
             userMap.put("id", user.getId());
@@ -76,7 +83,6 @@ public class PostService {
                 imageList.put("create_date", ((Object[]) image)[2]);
                 imageList.put("type", ((Object[]) image)[3]);
                 imageList.put("id", ((Object[]) image)[4]);
-//                System.out.println(imageList);
                 imageListAll.add(imageList);
             }
             postList.put("image_list", imageListAll);
