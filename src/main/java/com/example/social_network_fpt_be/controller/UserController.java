@@ -1,10 +1,10 @@
 package com.example.social_network_fpt_be.controller;
 
 import com.example.social_network_fpt_be.models.Post;
-import com.example.social_network_fpt_be.models.dtos.AuthUserDto;
-import com.example.social_network_fpt_be.models.dtos.PostDto;
-import com.example.social_network_fpt_be.models.dtos.UpdateUserDto;
-import com.example.social_network_fpt_be.models.dtos.UserDto;
+import com.example.social_network_fpt_be.service.dtos.AuthUserDto;
+import com.example.social_network_fpt_be.service.dtos.PostDto;
+import com.example.social_network_fpt_be.service.dtos.UpdateUserDto;
+import com.example.social_network_fpt_be.service.dtos.UserDto;
 import com.example.social_network_fpt_be.models.User;
 import com.example.social_network_fpt_be.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
