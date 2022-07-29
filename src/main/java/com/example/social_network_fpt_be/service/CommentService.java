@@ -39,7 +39,6 @@ public class CommentService {
                 commemtList.put("comment", comment.getComment());
                 commemtList.put("id_comment_child", getCommentChild(comment.getId_comment()));
                 commemtList.put("create_date", comment.getCreate_date());
-                commemtList.put("like_number", comment.getLike_number());
                 List<Hashtable<String, Object>> imageListAll = new ArrayList<>();
                 Hashtable<String,Object> imageList = new Hashtable<>();
                 for (Object image : imageService.findImageByTypeAndId("comment_image", comment.getId_comment())) {
@@ -58,7 +57,10 @@ public class CommentService {
             System.out.println(e.getMessage());
             return null;
         }
+    }
 
+    public int getCommentCountByPostId(Long post_id) {
+        return commentRepository.getCommentByPostId(post_id).size();
     }
 
     public List<Hashtable<String, Object>> getCommentChild(Long id_comment_father){
@@ -77,7 +79,6 @@ public class CommentService {
             commemtList.put("comment", comment.getComment());
             commemtList.put("id_comment_child", commentChild == null ? "" : commentChild);
             commemtList.put("create_date", comment.getCreate_date());
-            commemtList.put("like_number", comment.getLike_number());
             List<Hashtable<String, Object>> imageListAll = new ArrayList<>();
             Hashtable<String,Object> imageList = new Hashtable<>();
             for (Object image : imageService.findImageByTypeAndId("comment_image", comment.getId_comment())) {
@@ -104,7 +105,6 @@ public class CommentService {
             commemtList.put("comment", comment.getComment());
             commemtList.put("id_comment_child", getCommentChild(comment.getId_comment()));
             commemtList.put("create_date", comment.getCreate_date());
-            commemtList.put("like_number", comment.getLike_number());
             List<Hashtable<String, Object>> imageListAll = new ArrayList<>();
             Hashtable<String,Object> imageList = new Hashtable<>();
             for (Object image : imageService.findImageByTypeAndId("comment_image", comment.getId_comment())) {
@@ -131,7 +131,6 @@ public class CommentService {
         cmt.setId_comment_father(id_comment_father);
         cmt.setComment(comment);
         cmt.setCreate_date(LocalDateTime.now());
-        cmt.setLike_number(0L);
         commentRepository.save(cmt);
         if (comment_image.getContentType() != null){
             imageService.createImage(comment_image, "comment_image", cmt.getId_comment());
@@ -144,7 +143,6 @@ public class CommentService {
         if (commentOld.isPresent()){
             commentOld.get().setComment(comment);
             commentOld.get().setCreate_date(LocalDateTime.now());
-            commentOld.get().setLike_number(like_number);
             if (comment_image.getContentType() != null){
                 imageService.deleteImageByTypeAndId("comment_image", id_comment);
                 imageService.createImage(comment_image, "comment_image", commentOld.get().getId_comment());

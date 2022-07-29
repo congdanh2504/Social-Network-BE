@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @Embeddable
 @Data
-public class MyKey implements Serializable {
+public class FollowKey implements Serializable {
 
     @Column(name = "id_user_follow", nullable = false)
     private Long id_user_follow;

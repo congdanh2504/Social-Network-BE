@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "follow")
@@ -14,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class Follow {
     @EmbeddedId
-    private MyKey myKey;
+    private FollowKey myKey;
 }
 
 

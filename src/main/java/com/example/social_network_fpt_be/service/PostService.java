@@ -27,12 +27,18 @@ public class PostService {
 
     private final UserService userService;
 
+    private final LikeRecordService likeRecordService;
+
+    private final CommentService commentService;
+
     @Autowired
-    public PostService(PostRepository postRepository, ImageService imageService, VideoService videoService,@Lazy UserService userService) {
+    public PostService(PostRepository postRepository, ImageService imageService, VideoService videoService, @Lazy UserService userService, LikeRecordService likeRecordService, CommentService commentService) {
         this.postRepository = postRepository;
         this.imageService = imageService;
         this.videoService = videoService;
         this.userService = userService;
+        this.likeRecordService = likeRecordService;
+        this.commentService = commentService;
     }
 
     public List<Hashtable<String, Object>> getPostList() {
@@ -47,15 +53,17 @@ public class PostService {
 
     private List<Hashtable<String, Object>> getPostDetail(List<Object> posts) {
         List<Hashtable<String, Object>> result = new ArrayList<>();
-        if (posts == null){
+        if (posts == null) {
             return null;
         }
-        for (Object post: posts) {
+        for (Object post : posts) {
             // output the first value in posts
             Hashtable<String, Object> postList = new Hashtable<>();
             postList.put("id_post", ((Object[]) post)[0]);
             Hashtable<String, Object> userMap = new Hashtable<>();
             User user = userService.getUserById(Long.parseLong(String.valueOf(((Object[]) post)[1])));
+            int likeCount = likeRecordService.getLikeCountByIdPost(Long.parseLong(String.valueOf(((Object[]) post)[0])));
+            int commentCount = commentService.getCommentCountByPostId(Long.parseLong(String.valueOf(((Object[]) post)[0])));
             userMap.put("id", user.getId());
             userMap.put("email", user.getEmail());
             userMap.put("username", user.getUsername());
@@ -65,6 +73,8 @@ public class PostService {
             postList.put("user", userMap);
             postList.put("title", ((Object[]) post)[2]);
             postList.put("description", ((Object[]) post)[3]);
+            postList.put("like", likeCount);
+            postList.put("comment", commentCount);
             postList.put("create_date", ((Object[]) post)[4]);
             if (((Object[]) post)[5] != null) {
                 postList.put("post_video", ((Object[]) post)[5]);
@@ -76,8 +86,8 @@ public class PostService {
             List<Hashtable<String, Object>> imageListAll = new ArrayList<>();
 
             List<Object> images = imageService.findImageByTypeAndId("post_image", Long.parseLong(String.valueOf(postList.get("id_post"))));
-            for (Object image: images) {
-                Hashtable<String,Object> imageList = new Hashtable<>();
+            for (Object image : images) {
+                Hashtable<String, Object> imageList = new Hashtable<>();
                 imageList.put("id_image", ((Object[]) image)[0]);
                 imageList.put("url", ((Object[]) image)[1]);
                 imageList.put("create_date", ((Object[]) image)[2]);
@@ -95,7 +105,7 @@ public class PostService {
         Hashtable<String, Object> postList = new Hashtable<>();
         Hashtable<String, Object> userMap = new Hashtable<>();
         Object post = postRepository.getPostBy(id_post);
-        if (post == null){
+        if (post == null) {
             return null;
         }
         postList.put("id_post", ((Object[]) post)[0]);
@@ -112,9 +122,9 @@ public class PostService {
             postList.put("url_video", "");
         }
         List<Hashtable<String, Object>> imageListAll = new ArrayList<>();
-        Hashtable<String,Object> imageList = new Hashtable<>();
+        Hashtable<String, Object> imageList = new Hashtable<>();
         List<Object> images = imageService.findImageByTypeAndId("post_image", Long.parseLong(String.valueOf(postList.get("id_post"))));
-        for (Object image: images) {
+        for (Object image : images) {
             imageList.put("id_image", ((Object[]) image)[0]);
             imageList.put("url", ((Object[]) image)[1]);
             imageList.put("create_date", ((Object[]) image)[2]);
@@ -139,7 +149,7 @@ public class PostService {
         postRepository.save(post);
 //        System.out.println(post);
 //        System.out.println(post_image.size());
-        for (MultipartFile multipartFile: post_image){
+        for (MultipartFile multipartFile : post_image) {
             if (multipartFile.getContentType() != null) {
                 imageService.createImage(multipartFile, "post_image", post.getId_post());
             }
@@ -161,15 +171,15 @@ public class PostService {
             videoService.deleteVideo(postOld.getPost_video());
         }
 
-        if (imageService.findImageByTypeAndId("video_image", id_post) != null){
+        if (imageService.findImageByTypeAndId("video_image", id_post) != null) {
             imageService.deleteImageByTypeAndId("post_image", id_post);
         }
         if (post_image.get(0).getContentType() != null) {
-            for (MultipartFile multipartFile: post_image){
+            for (MultipartFile multipartFile : post_image) {
                 imageService.createImage(multipartFile, "post_image", id_post);
             }
         }
-        if (postOld != null){
+        if (postOld != null) {
             postOld.setId_user(id_user);
             postOld.setTitle(title);
             postOld.setDescription(description);
@@ -181,8 +191,8 @@ public class PostService {
 
     }
 
-    public String deletePost(Long id_post){
-        try{
+    public String deletePost(Long id_post) {
+        try {
             postRepository.deleteById(id_post);
             imageService.deleteImageByTypeAndId("post_image", id_post);
             videoService.deleteVideo(id_post);

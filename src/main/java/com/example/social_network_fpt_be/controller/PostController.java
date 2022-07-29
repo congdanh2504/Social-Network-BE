@@ -1,9 +1,6 @@
 package com.example.social_network_fpt_be.controller;
 
-import com.example.social_network_fpt_be.service.ImageService;
-import com.example.social_network_fpt_be.service.PostService;
-import com.example.social_network_fpt_be.service.UserService;
-import com.example.social_network_fpt_be.service.VideoService;
+import com.example.social_network_fpt_be.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +16,18 @@ import java.util.List;
 @RequestMapping(path = "/api/v1/post")
 public class PostController {
 
-    @Autowired
-    private PostService postService;
-    @Autowired
-    private ImageService imageService;
-    @Autowired
-    private VideoService videoService;
+    private final PostService postService;
+    private final ImageService imageService;
+    private final VideoService videoService;
+    private final UserService userService;
 
     @Autowired
-    private UserService userService;
+    public PostController(PostService postService, ImageService imageService, VideoService videoService, UserService userService) {
+        this.postService = postService;
+        this.imageService = imageService;
+        this.videoService = videoService;
+        this.userService = userService;
+    }
 
     @GetMapping(path = "")
     public ResponseEntity<List<Hashtable<String, Object>>> getPostList() {
