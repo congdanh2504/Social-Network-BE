@@ -27,4 +27,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                     "ORDER BY p.create_date desc",
             nativeQuery = true)
     List<Post> getFiveLatestPosts();
+
+    @Query("SELECT p FROM Post p WHERE p.id_user = :user_id ORDER BY p.create_date DESC ")
+    List<Post> getUserPosts(Long user_id);
 }

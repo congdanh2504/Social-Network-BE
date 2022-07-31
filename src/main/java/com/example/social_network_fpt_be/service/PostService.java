@@ -54,6 +54,11 @@ public class PostService {
         return getPostDetail(posts);
     }
 
+    public List<DetailPostDto> getUserPosts(Long user_id) {
+        List<Post> posts = postRepository.getUserPosts(user_id);
+        return getPostDetail(posts);
+    }
+
     private List<DetailPostDto> getPostDetail(List<Post> posts) {
         List<DetailPostDto> result = new ArrayList<>();
         if (posts == null) {

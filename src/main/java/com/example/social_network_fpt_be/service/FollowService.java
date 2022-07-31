@@ -3,9 +3,9 @@ package com.example.social_network_fpt_be.service;
 import com.example.social_network_fpt_be.models.Follow;
 import com.example.social_network_fpt_be.models.FollowKey;
 import com.example.social_network_fpt_be.repository.FollowRepository;
+import com.example.social_network_fpt_be.service.dtos.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,10 +16,12 @@ import java.util.*;
 public class FollowService {
 
     private final FollowRepository followRepository;
+    private final UserService userService;
 
     @Autowired
-    public FollowService(FollowRepository followRepository) {
+    public FollowService(FollowRepository followRepository, @Lazy UserService userService) {
         this.followRepository = followRepository;
+        this.userService = userService;
     }
 
     public List<Follow> getAllFollow(){
@@ -53,8 +55,6 @@ public class FollowService {
     @Transactional
     public String deleteFollow(Long id_user_follow, Long id_user_followed) {
         try{
-            System.out.println("id_user_follow "+id_user_follow);
-            System.out.println("id_user_followed "+id_user_followed);
             followRepository.deleteFollow(id_user_follow, id_user_followed);
             return "success";
         } catch (Exception e) {
@@ -63,37 +63,46 @@ public class FollowService {
         }
     }
 
-    public List<Hashtable<String, Object>> getListFriendUser(Long id_user_follow){
-        try{
-            List<Object> follow = followRepository.getListFriend();
-            List<Hashtable<String, Object>> friends = new ArrayList<>();
-            for (Object fl : follow){
-                if (Objects.equals(((Object[]) fl)[0], id_user_follow)) {
-                    Hashtable<String,Object> friend = new Hashtable<>();
-                    friend.put("id_user_follow", ((Object[]) fl)[0]);
-                    friend.put("id_user_followed", ((Object[]) fl)[1]);
-                    friends.add(friend);
-                }
-            }
-            return friends;
-        } catch (Exception e){
-            e.printStackTrace();
-            return null;
+    public List<UserDto> getFriends(Long user_id) {
+        List<Follow> followEachOtherList = followRepository.getFriends(user_id);
+        List<UserDto> result = new ArrayList<>();
+        for (Follow follow: followEachOtherList) {
+            result.add(userService.getUserById(follow.getMyKey().getId_user_followed()));
         }
+        return result;
     }
 
-    public Boolean isFriend(Long id_user_follow, Long id_user_followed){
-        try{
-            List<Object> getFriend = followRepository.getListFriend();
-            for (Object fl : getFriend){
-                if (Objects.equals(((Object[]) fl)[0], id_user_follow) && Objects.equals(((Object[]) fl)[0], id_user_followed)){
-                    return true;
-                }
-            }
-            return false;
-        } catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
-    }
+//    public List<Hashtable<String, Object>> getListFriendUser(Long id_user_follow){
+//        try{
+//            List<Object> follow = followRepository.getListFriend();
+//            List<Hashtable<String, Object>> friends = new ArrayList<>();
+//            for (Object fl : follow){
+//                if (Objects.equals(((Object[]) fl)[0], id_user_follow)) {
+//                    Hashtable<String,Object> friend = new Hashtable<>();
+//                    friend.put("id_user_follow", ((Object[]) fl)[0]);
+//                    friend.put("id_user_followed", ((Object[]) fl)[1]);
+//                    friends.add(friend);
+//                }
+//            }
+//            return friends;
+//        } catch (Exception e){
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+
+//    public Boolean isFriend(Long id_user_follow, Long id_user_followed){
+//        try{
+//            List<Object> getFriend = followRepository.getListFriend();
+//            for (Object fl : getFriend){
+//                if (Objects.equals(((Object[]) fl)[0], id_user_follow) && Objects.equals(((Object[]) fl)[0], id_user_followed)){
+//                    return true;
+//                }
+//            }
+//            return false;
+//        } catch (Exception e){
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
 }

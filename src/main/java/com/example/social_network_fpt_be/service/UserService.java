@@ -13,8 +13,8 @@ import com.example.social_network_fpt_be.models.User;
 import com.example.social_network_fpt_be.service.dtos.UserDto;
 import com.example.social_network_fpt_be.repository.UserRepository;
 import com.example.social_network_fpt_be.util.ImageType;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,7 +35,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 @Slf4j
 public class UserService implements UserDetailsService {
@@ -43,7 +42,18 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
     private final PostService postService;
+    private final FollowService followService;
     private final Environment env;
+
+    @Autowired
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ImageService imageService, PostService postService, FollowService followService, Environment env) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.imageService = imageService;
+        this.postService = postService;
+        this.followService = followService;
+        this.env = env;
+    }
 
     public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -74,9 +84,31 @@ public class UserService implements UserDetailsService {
         return userDto;
     }
 
+    public DetailUserDto getDetailUser(String username) {
+        DetailUserDto detailUserDto = new DetailUserDto();
+        UserDto userDto = getProfile(username);
+        detailUserDto.setId(userDto.getId());
+        detailUserDto.setUsername(userDto.getUsername());
+        detailUserDto.setFirstName(userDto.getFirstName());
+        detailUserDto.setLastName(userDto.getLastName());
+        detailUserDto.setEmail(userDto.getEmail());
+        detailUserDto.setAvt(userDto.getAvt());
+        String coverImage = imageService.getCoverImageByUser(userDto.getId());
+        detailUserDto.setCover(coverImage);
+        detailUserDto.setPhone(userDto.getPhone());
+        detailUserDto.setDescription(userDto.getDescription());
+        detailUserDto.setRole(userDto.getRole());
+        detailUserDto.setFriends(followService.getFriends(userDto.getId()));
+        detailUserDto.setPosts(postService.getUserPosts(userDto.getId()));
+        return detailUserDto;
+    }
+
     public UserDto getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
-        return UserDto.toUserDto(user.get());
+        UserDto userDto = UserDto.toUserDto(user.get());
+        String avt = imageService.getAvatarByUser(id);
+        userDto.setAvt(avt);
+        return userDto;
     }
 
     public UserDto updateUser(UpdateUserDto updateUser, String username) throws IOException {

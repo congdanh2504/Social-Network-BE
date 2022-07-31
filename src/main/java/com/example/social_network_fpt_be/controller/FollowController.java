@@ -50,21 +50,21 @@ public class FollowController {
         }
     }
 
-    @GetMapping(path= "/listFriend")
-    public ResponseEntity<List<Hashtable<String, Object>>> getListFriendUser(Authentication authentication){
-        Long id_user_follow = userService.getUserByUsername(authentication.getName()).getId();
-        return ResponseEntity.status(HttpStatus.OK).body(followService.getListFriendUser(id_user_follow));
-    }
+//    @GetMapping(path= "/listFriend")
+//    public ResponseEntity<List<Hashtable<String, Object>>> getListFriendUser(Authentication authentication){
+//        Long id_user_follow = userService.getUserByUsername(authentication.getName()).getId();
+//        return ResponseEntity.status(HttpStatus.OK).body(followService.getListFriendUser(id_user_follow));
+//    }
 //
 //    @GetMapping(path= "/")
 //    public ResponseEntity<List<Follow>> getListFriend(){
 //        return ResponseEntity.status(HttpStatus.OK).body(followService.getListFriend());
 //    }
 
-    @GetMapping(path= "/isFriend")
-    public ResponseEntity<Boolean> isFriend(@RequestParam("id_user_followed") Long id_user_followed,
-                                            Authentication authentication){
-        Long id_user_follow = userService.getUserByUsername(authentication.getName()).getId();
-        return ResponseEntity.status(HttpStatus.OK).body(followService.isFriend(id_user_follow,id_user_followed ));
-    }
+//    @GetMapping(path= "/isFriend")
+//    public ResponseEntity<Boolean> isFriend(@RequestParam("id_user_followed") Long id_user_followed,
+//                                            Authentication authentication){
+//        Long id_user_follow = userService.getUserByUsername(authentication.getName()).getId();
+//        return ResponseEntity.status(HttpStatus.OK).body(followService.isFriend(id_user_follow,id_user_followed ));
+//    }
 }

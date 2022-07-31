@@ -22,6 +22,7 @@ public class DetailUserDto {
     private int isBlock;
     private String description;
     private String avt = "";
+    private String cover = "";
     private List<UserDto> friends;
     private List<DetailPostDto> posts;
 }

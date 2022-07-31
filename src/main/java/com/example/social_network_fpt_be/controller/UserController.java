@@ -1,10 +1,7 @@
 package com.example.social_network_fpt_be.controller;
 
 import com.example.social_network_fpt_be.models.Post;
-import com.example.social_network_fpt_be.service.dtos.AuthUserDto;
-import com.example.social_network_fpt_be.service.dtos.UploadPostDto;
-import com.example.social_network_fpt_be.service.dtos.UpdateUserDto;
-import com.example.social_network_fpt_be.service.dtos.UserDto;
+import com.example.social_network_fpt_be.service.dtos.*;
 import com.example.social_network_fpt_be.models.User;
 import com.example.social_network_fpt_be.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,11 +30,10 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getProfile(authentication.getName()));
     }
 
-//    @GetMapping("detail-user/{id}")
-//    public ResponseEntity<UserDto> getDetailProfile(@PathVariable Long id) {
-////        return ResponseEntity.ok().body(userService.getProfile(authentication.getName()));
-//
-//    }
+    @GetMapping("detail-user/{username}")
+    public ResponseEntity<DetailUserDto> getDetailProfile(@PathVariable String username) {
+        return ResponseEntity.ok().body(userService.getDetailUser(username));
+    }
 
     @GetMapping("search")
     public ResponseEntity<List<UserDto>> searchUsers(@RequestParam String username) {
