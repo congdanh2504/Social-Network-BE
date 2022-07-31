@@ -6,7 +6,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.social_network_fpt_be.models.Post;
-import com.example.social_network_fpt_be.service.dtos.PostDto;
+import com.example.social_network_fpt_be.service.dtos.DetailUserDto;
+import com.example.social_network_fpt_be.service.dtos.UploadPostDto;
 import com.example.social_network_fpt_be.service.dtos.UpdateUserDto;
 import com.example.social_network_fpt_be.models.User;
 import com.example.social_network_fpt_be.service.dtos.UserDto;
@@ -73,9 +74,9 @@ public class UserService implements UserDetailsService {
         return userDto;
     }
 
-    public User getUserById(Long id) {
+    public UserDto getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
-        return user.get();
+        return UserDto.toUserDto(user.get());
     }
 
     public UserDto updateUser(UpdateUserDto updateUser, String username) throws IOException {
@@ -96,7 +97,7 @@ public class UserService implements UserDetailsService {
         return userDto;
     }
 
-    public Post createPost(PostDto postDto, String username) throws IOException {
+    public Post createPost(UploadPostDto postDto, String username) throws IOException {
         User user = getUserByUsername(username);
         return postService.createPost(postDto.getPost_image(), user.getId(), postDto.getTitle(), postDto.getDescription());
     }

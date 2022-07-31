@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class PostDto {
+public class UploadPostDto {
     List<MultipartFile> post_image = new ArrayList<>();
     @NotBlank
     private String title;

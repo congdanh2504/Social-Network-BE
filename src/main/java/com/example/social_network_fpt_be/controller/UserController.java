@@ -2,7 +2,7 @@ package com.example.social_network_fpt_be.controller;
 
 import com.example.social_network_fpt_be.models.Post;
 import com.example.social_network_fpt_be.service.dtos.AuthUserDto;
-import com.example.social_network_fpt_be.service.dtos.PostDto;
+import com.example.social_network_fpt_be.service.dtos.UploadPostDto;
 import com.example.social_network_fpt_be.service.dtos.UpdateUserDto;
 import com.example.social_network_fpt_be.service.dtos.UserDto;
 import com.example.social_network_fpt_be.models.User;
@@ -33,6 +33,12 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getProfile(authentication.getName()));
     }
 
+//    @GetMapping("detail-user/{id}")
+//    public ResponseEntity<UserDto> getDetailProfile(@PathVariable Long id) {
+////        return ResponseEntity.ok().body(userService.getProfile(authentication.getName()));
+//
+//    }
+
     @GetMapping("search")
     public ResponseEntity<List<UserDto>> searchUsers(@RequestParam String username) {
         return ResponseEntity.ok().body(userService.searchByUsername(username));
@@ -40,7 +46,7 @@ public class UserController {
 
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(UserDto.toUserDto(userService.getUserById(id)));
+        return ResponseEntity.ok().body(userService.getUserById(id));
     }
 
     @PutMapping(path = "", consumes = "multipart/form-data")
@@ -49,7 +55,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/post", consumes = "multipart/form-data")
-    public ResponseEntity<Post> createPost(@Valid @ModelAttribute PostDto postDto, Authentication authentication) throws IOException {
+    public ResponseEntity<Post> createPost(@Valid @ModelAttribute UploadPostDto postDto, Authentication authentication) throws IOException {
         return ResponseEntity.ok().body(userService.createPost(postDto, authentication.getName()));
     }
 

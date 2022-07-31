@@ -10,10 +10,10 @@ import java.util.List;
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Long>{
 
-    @Query("SELECT i.id_image, i.url, i.create_date, i.type, i.id " +
+    @Query("SELECT i " +
             "FROM Image i "+
             "WHERE i.type = ?1 and i.id = ?2")
-    List<Object> findImageByTypeAndId(String type, Long id);
+    List<Image> findImageByTypeAndId(String type, Long id);
 
     @Query("SELECT i FROM Image i WHERE i.type = 'user_avt' AND i.id = :userId")
     Image getAvatarByUser(Long userId);

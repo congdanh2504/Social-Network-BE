@@ -71,15 +71,15 @@ public class ImageService {
         }
     }
 
-    public List<Object> findImageByTypeAndId(String type, Long id) {
+    public List<Image> findImageByTypeAndId(String type, Long id) {
         return imageRepository.findImageByTypeAndId(type, id);
     }
 
     public void deleteImageByTypeAndId(String type, Long id) {
         try{
-            List<Object> image = imageRepository.findImageByTypeAndId(type, id);
-            for (Object img: image) {
-                deleteImage((Long) ((Object[]) img)[0]);
+            List<Image> image = imageRepository.findImageByTypeAndId(type, id);
+            for (Image img: image) {
+                deleteImage(img.getId_image());
             }
         } catch (Exception e) {
             e.printStackTrace();
