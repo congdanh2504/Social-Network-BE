@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 public class UploadPostDto {
-    List<MultipartFile> post_image = new ArrayList<>();
+    List<String> images = new ArrayList<>();
     @NotBlank
     private String title;
     @NotBlank

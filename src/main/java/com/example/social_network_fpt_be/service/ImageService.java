@@ -37,7 +37,16 @@ public class ImageService {
 
     public Image createImage(MultipartFile imageFile, String type, Long id) throws IOException {
         String url = uploadImage(imageFile);
-        System.out.println(url);
+        Image image = new Image();
+        image.setUrl(url);
+        image.setCreate_date(LocalDateTime.now());
+        image.setType(type);
+        image.setId(id);
+        imageRepository.save(image);
+        return image;
+    }
+
+    public Image createWithURL(String url ,String type, Long id) {
         Image image = new Image();
         image.setUrl(url);
         image.setCreate_date(LocalDateTime.now());
@@ -90,7 +99,7 @@ public class ImageService {
         return UUID.randomUUID().toString();
     }
 
-    private String uploadImage(MultipartFile imageFile) throws IOException {
+    public String uploadImage(MultipartFile imageFile) throws IOException {
         String name = setRandomFileName();
         // Upload file to Cloud Storage
         StorageOptions storageOptions = StorageOptions.newBuilder()

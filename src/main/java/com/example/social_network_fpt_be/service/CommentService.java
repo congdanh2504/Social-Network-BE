@@ -179,6 +179,7 @@ public class CommentService {
             commentDto.setId(comment.getId_comment());
             commentDto.setUser(userService.getUserById(comment.getId_user_comment()));
             commentDto.setCreate_date(comment.getCreate_date());
+            commentDto.setChildren(getChildrenComment(comment.getId_comment()));
         }
         return result;
     }

@@ -4,6 +4,7 @@ import com.example.social_network_fpt_be.models.Post;
 import com.example.social_network_fpt_be.models.User;
 import com.example.social_network_fpt_be.repository.PostRepository;
 import com.example.social_network_fpt_be.service.dtos.DetailPostDto;
+import com.example.social_network_fpt_be.service.dtos.UploadPostDto;
 import com.example.social_network_fpt_be.util.ImageType;
 import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,6 +114,18 @@ public class PostService {
 //        }
 //        return postList;
 //    }
+    public Post createPost(UploadPostDto postDto, Long id_user) throws IOException {
+        Post post = new Post();
+        post.setId_user(id_user);
+        post.setTitle(postDto.getTitle());
+        post.setDescription(postDto.getDescription());
+        post.setCreate_date(LocalDateTime.now());
+        postRepository.save(post);
+        for (String url : postDto.getImages()) {
+            imageService.createWithURL(url, "post_image", post.getId_post());
+        }
+        return post;
+    }
 
     public Post createPost(List<MultipartFile> post_image, Long id_user, String title, String description) throws IOException {
 //        Long id_video = null;

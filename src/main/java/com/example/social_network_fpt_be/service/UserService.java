@@ -139,7 +139,7 @@ public class UserService implements UserDetailsService {
 
     public Post createPost(UploadPostDto postDto, String username) throws IOException {
         User user = getUserByUsername(username);
-        return postService.createPost(postDto.getPost_image(), user.getId(), postDto.getTitle(), postDto.getDescription());
+        return postService.createPost(postDto, user.getId());
     }
 
     public List<UserDto> searchByUsername(String name) {
