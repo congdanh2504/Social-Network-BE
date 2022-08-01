@@ -61,7 +61,13 @@ public class UserController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<UserDto> register(@Valid @RequestBody AuthUserDto user) {
+    public ResponseEntity<?> register(@Valid @RequestBody AuthUserDto user) {
+        if (userService.checkEmailAlreadyUsed(user.getEmail())) {
+            return ResponseEntity.badRequest().body("Email already used");
+        }
+        if (userService.checkUsernameAlreadyUsed(user.getUsername())) {
+            return ResponseEntity.badRequest().body("Username already used");
+        }
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(user.getPassword());

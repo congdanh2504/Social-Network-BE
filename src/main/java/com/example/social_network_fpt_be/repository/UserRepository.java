@@ -9,6 +9,8 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
 
+    User findByEmail(String email);
+
     @Query("SELECT u " +
             "FROM User u " +
             "WHERE function('dbo.ufn_removeMark', u.firstName) LIKE %:name% " +

@@ -55,6 +55,14 @@ public class UserService implements UserDetailsService {
         this.env = env;
     }
 
+    public boolean checkEmailAlreadyUsed(String email) {
+        return userRepository.findByEmail(email) != null;
+    }
+
+    public boolean checkUsernameAlreadyUsed(String username) {
+        return userRepository.findByUsername(username) != null;
+    }
+
     public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
