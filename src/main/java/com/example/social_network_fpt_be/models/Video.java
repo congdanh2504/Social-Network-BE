@@ -18,4 +18,5 @@ public class Video {
     private Long id_video;
     private String url;
     private LocalDateTime create_date;
+    private Long id_post;
 }

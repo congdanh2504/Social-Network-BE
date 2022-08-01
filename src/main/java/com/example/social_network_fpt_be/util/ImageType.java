@@ -16,5 +16,11 @@ public enum ImageType {
         public String toString() {
             return "post_image";
         }
+    },
+    COMMENT_IMAGE {
+        @Override
+        public String toString() {
+            return "comment_image";
+        }
     }
 }

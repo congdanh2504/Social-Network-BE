@@ -1,9 +1,8 @@
-package com.example.social_network_fpt_be.models.dtos;
+package com.example.social_network_fpt_be.service.dtos;
 
 import com.example.social_network_fpt_be.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 @AllArgsConstructor

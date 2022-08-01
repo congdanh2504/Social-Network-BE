@@ -20,6 +20,5 @@ public class Comment {
     private Long id_user_comment;
     private Long id_comment_father;
     private String comment;
-    private Long like_number;
     private LocalDateTime create_date;
 }

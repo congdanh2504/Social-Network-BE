@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_image;
+    private Long id_image;
     private String url;
     private LocalDateTime create_date;
     private String type;

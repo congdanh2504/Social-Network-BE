@@ -1,10 +1,7 @@
 package com.example.social_network_fpt_be.controller;
 
 import com.example.social_network_fpt_be.models.Post;
-import com.example.social_network_fpt_be.models.dtos.AuthUserDto;
-import com.example.social_network_fpt_be.models.dtos.PostDto;
-import com.example.social_network_fpt_be.models.dtos.UpdateUserDto;
-import com.example.social_network_fpt_be.models.dtos.UserDto;
+import com.example.social_network_fpt_be.service.dtos.*;
 import com.example.social_network_fpt_be.models.User;
 import com.example.social_network_fpt_be.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +30,11 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getProfile(authentication.getName()));
     }
 
+    @GetMapping("detail-user/{username}")
+    public ResponseEntity<DetailUserDto> getDetailProfile(@PathVariable String username) {
+        return ResponseEntity.ok().body(userService.getDetailUser(username));
+    }
+
     @GetMapping("search")
     public ResponseEntity<List<UserDto>> searchUsers(@RequestParam String username) {
         return ResponseEntity.ok().body(userService.searchByUsername(username));
@@ -40,7 +42,7 @@ public class UserController {
 
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(UserDto.toUserDto(userService.getUserById(id)));
+        return ResponseEntity.ok().body(userService.getUserById(id));
     }
 
     @PutMapping(path = "", consumes = "multipart/form-data")
@@ -48,8 +50,9 @@ public class UserController {
         return ResponseEntity.ok().body(userService.updateUser(updateUser, authentication.getName()));
     }
 
-    @PostMapping(path = "/post", consumes = "multipart/form-data")
-    public ResponseEntity<Post> createPost(@Valid @ModelAttribute PostDto postDto, Authentication authentication) throws IOException {
+    @PostMapping(path = "/post")
+    public ResponseEntity<Post> createPost(@Valid @RequestBody UploadPostDto postDto, Authentication authentication) throws IOException {
+        System.out.println(postDto.getImages());
         return ResponseEntity.ok().body(userService.createPost(postDto, authentication.getName()));
     }
 
@@ -59,7 +62,13 @@ public class UserController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<UserDto> register(@Valid @RequestBody AuthUserDto user) {
+    public ResponseEntity<?> register(@Valid @RequestBody AuthUserDto user) {
+        if (userService.checkEmailAlreadyUsed(user.getEmail())) {
+            return ResponseEntity.badRequest().body("Email already used");
+        }
+        if (userService.checkUsernameAlreadyUsed(user.getUsername())) {
+            return ResponseEntity.badRequest().body("Username already used");
+        }
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(user.getPassword());
@@ -68,6 +77,16 @@ public class UserController {
         newUser.setLastName(user.getLastName());
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/users").toUriString());
         return ResponseEntity.created(uri).body(UserDto.toUserDto(userService.saveUser(newUser)));
+    }
+
+    @PostMapping("like-post/{post_id}")
+    public void likePost(@PathVariable Long post_id, Authentication authentication) {
+        userService.likePost(post_id, authentication.getName());
+    }
+
+    @DeleteMapping("unlike-post/{post_id}")
+    public void unlikePost(@PathVariable Long post_id, Authentication authentication) {
+        userService.unlikePost(post_id, authentication.getName());
     }
 
     @GetMapping("refresh-token")

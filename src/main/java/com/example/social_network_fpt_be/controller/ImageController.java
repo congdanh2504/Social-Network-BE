@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -24,6 +25,12 @@ public class ImageController {
     @GetMapping(path = "")
     public ResponseEntity<List<Image>> getImageList() {
         return ResponseEntity.status(HttpStatus.OK).body(imageService.getImageList());
+    }
+
+    @PostMapping(path = "/upload", consumes = "multipart/form-data")
+    public ResponseEntity<?> upload(@RequestPart() MultipartFile file) throws IOException {
+        String url = imageService.uploadImage(file);
+        return ResponseEntity.status(HttpStatus.OK).body(url);
     }
 
     @GetMapping(path = "/{id_image}")

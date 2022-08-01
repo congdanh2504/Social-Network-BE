@@ -1,4 +1,4 @@
-package com.example.social_network_fpt_be.models.dtos;
+package com.example.social_network_fpt_be.service.dtos;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class PostDto {
-    List<MultipartFile> post_image = new ArrayList<>();
+public class UploadPostDto {
+    List<String> images = new ArrayList<>();
     @NotBlank
     private String title;
     @NotBlank

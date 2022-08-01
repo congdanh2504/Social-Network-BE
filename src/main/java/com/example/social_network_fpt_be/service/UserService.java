@@ -6,14 +6,15 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.social_network_fpt_be.models.Post;
-import com.example.social_network_fpt_be.models.dtos.PostDto;
-import com.example.social_network_fpt_be.models.dtos.UpdateUserDto;
+import com.example.social_network_fpt_be.service.dtos.DetailUserDto;
+import com.example.social_network_fpt_be.service.dtos.UploadPostDto;
+import com.example.social_network_fpt_be.service.dtos.UpdateUserDto;
 import com.example.social_network_fpt_be.models.User;
-import com.example.social_network_fpt_be.models.dtos.UserDto;
+import com.example.social_network_fpt_be.service.dtos.UserDto;
 import com.example.social_network_fpt_be.repository.UserRepository;
 import com.example.social_network_fpt_be.util.ImageType;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,7 +35,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 @Slf4j
 public class UserService implements UserDetailsService {
@@ -42,7 +42,28 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
     private final PostService postService;
+    private final FollowService followService;
+    private final LikeRecordService likeRecordService;
     private final Environment env;
+
+    @Autowired
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ImageService imageService, PostService postService, FollowService followService, LikeRecordService likeRecordService, Environment env) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.imageService = imageService;
+        this.postService = postService;
+        this.followService = followService;
+        this.likeRecordService = likeRecordService;
+        this.env = env;
+    }
+
+    public boolean checkEmailAlreadyUsed(String email) {
+        return userRepository.findByEmail(email) != null;
+    }
+
+    public boolean checkUsernameAlreadyUsed(String username) {
+        return userRepository.findByUsername(username) != null;
+    }
 
     public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -73,9 +94,31 @@ public class UserService implements UserDetailsService {
         return userDto;
     }
 
-    public User getUserById(Long id) {
+    public DetailUserDto getDetailUser(String username) {
+        DetailUserDto detailUserDto = new DetailUserDto();
+        UserDto userDto = getProfile(username);
+        detailUserDto.setId(userDto.getId());
+        detailUserDto.setUsername(userDto.getUsername());
+        detailUserDto.setFirstName(userDto.getFirstName());
+        detailUserDto.setLastName(userDto.getLastName());
+        detailUserDto.setEmail(userDto.getEmail());
+        detailUserDto.setAvt(userDto.getAvt());
+        String coverImage = imageService.getCoverImageByUser(userDto.getId());
+        detailUserDto.setCover(coverImage);
+        detailUserDto.setPhone(userDto.getPhone());
+        detailUserDto.setDescription(userDto.getDescription());
+        detailUserDto.setRole(userDto.getRole());
+        detailUserDto.setFriends(followService.getFriends(userDto.getId()));
+        detailUserDto.setPosts(postService.getUserPosts(userDto.getId()));
+        return detailUserDto;
+    }
+
+    public UserDto getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
-        return user.get();
+        UserDto userDto = UserDto.toUserDto(user.get());
+        String avt = imageService.getAvatarByUser(id);
+        userDto.setAvt(avt);
+        return userDto;
     }
 
     public UserDto updateUser(UpdateUserDto updateUser, String username) throws IOException {
@@ -96,9 +139,9 @@ public class UserService implements UserDetailsService {
         return userDto;
     }
 
-    public Post createPost(PostDto postDto, String username) throws IOException {
+    public Post createPost(UploadPostDto postDto, String username) throws IOException {
         User user = getUserByUsername(username);
-        return postService.createPost(postDto.getPost_image(), user.getId(), postDto.getTitle(), postDto.getDescription());
+        return postService.createPost(postDto, user.getId());
     }
 
     public List<UserDto> searchByUsername(String name) {
@@ -115,6 +158,16 @@ public class UserService implements UserDetailsService {
             result.add(userDto);
         });
         return result;
+    }
+
+    public void likePost(Long post_id, String username) {
+        User user = getUserByUsername(username);
+        likeRecordService.likePost(post_id, user.getId());
+    }
+
+    public void unlikePost(Long post_id, String username) {
+        User user = getUserByUsername(username);
+        likeRecordService.unlikePost(post_id, user.getId());
     }
 
     private String removeAccent(String s) {
