@@ -72,6 +72,24 @@ public class FollowService {
         return result;
     }
 
+    public List<UserDto> getFollowers(Long user_id) {
+        List<Follow> followEachOtherList = followRepository.getFollowers(user_id);
+        List<UserDto> result = new ArrayList<>();
+        for (Follow follow: followEachOtherList) {
+            result.add(userService.getUserById(follow.getMyKey().getId_user_follow()));
+        }
+        return result;
+    }
+
+    public List<UserDto> getFollowings(Long user_id) {
+        List<Follow> followEachOtherList = followRepository.getFollowings(user_id);
+        List<UserDto> result = new ArrayList<>();
+        for (Follow follow: followEachOtherList) {
+            result.add(userService.getUserById(follow.getMyKey().getId_user_followed()));
+        }
+        return result;
+    }
+
 //    public List<Hashtable<String, Object>> getListFriendUser(Long id_user_follow){
 //        try{
 //            List<Object> follow = followRepository.getListFriend();

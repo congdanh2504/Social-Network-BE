@@ -110,6 +110,12 @@ public class UserService implements UserDetailsService {
         detailUserDto.setRole(userDto.getRole());
         detailUserDto.setFriends(followService.getFriends(userDto.getId()));
         detailUserDto.setPosts(postService.getUserPosts(userDto.getId()));
+        List<String> images = imageService.getPostImageByUser(userDto.getId());
+        detailUserDto.setFollowers(followService.getFollowers(userDto.getId()));
+        detailUserDto.setFollowings(followService.getFollowings(userDto.getId()));
+        if (!userDto.getAvt().equals("")) images.add(userDto.getAvt());
+        if (!coverImage.equals("")) images.add(coverImage);
+        detailUserDto.setImages(images);
         return detailUserDto;
     }
 

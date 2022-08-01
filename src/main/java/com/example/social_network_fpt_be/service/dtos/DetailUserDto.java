@@ -24,5 +24,8 @@ public class DetailUserDto {
     private String avt = "";
     private String cover = "";
     private List<UserDto> friends;
+    private List<UserDto> followers;
+    private List<UserDto> followings;
+    private List<String> images;
     private List<DetailPostDto> posts;
 }

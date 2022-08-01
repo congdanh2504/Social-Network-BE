@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.example.social_network_fpt_be.config.Setting.*;
 
@@ -133,6 +134,10 @@ public class ImageService {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    public List<String> getPostImageByUser(Long user_id) {
+        return imageRepository.getPostImageByUser(user_id).stream().map((Image::getUrl)).collect(Collectors.toList());
     }
 
     public Hashtable<String, Object> checkFile(MultipartFile imageFile) {
