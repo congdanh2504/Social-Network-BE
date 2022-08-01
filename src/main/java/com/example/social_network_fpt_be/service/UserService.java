@@ -43,15 +43,17 @@ public class UserService implements UserDetailsService {
     private final ImageService imageService;
     private final PostService postService;
     private final FollowService followService;
+    private final LikeRecordService likeRecordService;
     private final Environment env;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ImageService imageService, PostService postService, FollowService followService, Environment env) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ImageService imageService, PostService postService, FollowService followService, LikeRecordService likeRecordService, Environment env) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.imageService = imageService;
         this.postService = postService;
         this.followService = followService;
+        this.likeRecordService = likeRecordService;
         this.env = env;
     }
 
@@ -156,6 +158,16 @@ public class UserService implements UserDetailsService {
             result.add(userDto);
         });
         return result;
+    }
+
+    public void likePost(Long post_id, String username) {
+        User user = getUserByUsername(username);
+        likeRecordService.likePost(post_id, user.getId());
+    }
+
+    public void unlikePost(Long post_id, String username) {
+        User user = getUserByUsername(username);
+        likeRecordService.unlikePost(post_id, user.getId());
     }
 
     private String removeAccent(String s) {

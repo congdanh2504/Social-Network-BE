@@ -79,6 +79,16 @@ public class UserController {
         return ResponseEntity.created(uri).body(UserDto.toUserDto(userService.saveUser(newUser)));
     }
 
+    @PostMapping("like-post/{post_id}")
+    public void likePost(@PathVariable Long post_id, Authentication authentication) {
+        userService.likePost(post_id, authentication.getName());
+    }
+
+    @DeleteMapping("unlike-post/{post_id}")
+    public void unlikePost(@PathVariable Long post_id, Authentication authentication) {
+        userService.unlikePost(post_id, authentication.getName());
+    }
+
     @GetMapping("refresh-token")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);

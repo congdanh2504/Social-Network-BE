@@ -35,6 +35,11 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPostList());
     }
 
+    @GetMapping(path = "/{post_id}")
+    public ResponseEntity<DetailPostDto>  getPostById(@PathVariable Long post_id) {
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getPostById(post_id));
+    }
+
 //    @GetMapping(path = "{id_post}")
 //    public ResponseEntity<Hashtable<String, Object>> getPostById(@PathVariable Long id_post) {
 //        return ResponseEntity.status(HttpStatus.OK).body(postService.getPostByID(id_post));

@@ -1,12 +1,10 @@
 package com.example.social_network_fpt_be.service;
 
 import com.example.social_network_fpt_be.models.Post;
-import com.example.social_network_fpt_be.models.User;
 import com.example.social_network_fpt_be.repository.PostRepository;
 import com.example.social_network_fpt_be.service.dtos.DetailPostDto;
 import com.example.social_network_fpt_be.service.dtos.UploadPostDto;
 import com.example.social_network_fpt_be.util.ImageType;
-import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -16,7 +14,6 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 
 @Service
@@ -47,40 +44,49 @@ public class PostService {
 
     public List<DetailPostDto> getPostList() {
         List<Post> posts = postRepository.getAllPost();
-        return getPostDetail(posts);
+        return getDetailPosts(posts);
     }
 
     public List<DetailPostDto> getFiveLatestPosts() {
         List<Post> posts = postRepository.getFiveLatestPosts();
-        return getPostDetail(posts);
+        return getDetailPosts(posts);
     }
 
     public List<DetailPostDto> getUserPosts(Long user_id) {
         List<Post> posts = postRepository.getUserPosts(user_id);
-        return getPostDetail(posts);
+        return getDetailPosts(posts);
     }
 
-    private List<DetailPostDto> getPostDetail(List<Post> posts) {
+    public DetailPostDto getPostById(Long post_id) {
+        Post post = postRepository.getReferenceById(post_id);
+        return getDetailPost(post);
+    }
+
+    private DetailPostDto getDetailPost(Post post) {
+        DetailPostDto detailPostDto = new DetailPostDto();
+        detailPostDto.setId(post.getId_post());
+        detailPostDto.setTitle(post.getTitle());
+        detailPostDto.setDescription(post.getDescription());
+        detailPostDto.setCreate_date(post.getCreate_date());
+        detailPostDto.setUser(userService.getUserById(post.getId_user()));
+        detailPostDto.setImages(imageService.findImageByTypeAndId(ImageType.POST_IMAGE.toString(), post.getId_post()));
+        detailPostDto.setLikeUsers(likeRecordService.getLikeUsersByPostId(post.getId_post()));
+        detailPostDto.setComments(commentService.getCommentsByPostId(post.getId_post()));
+        return detailPostDto;
+    }
+
+    private List<DetailPostDto> getDetailPosts(List<Post> posts) {
         List<DetailPostDto> result = new ArrayList<>();
         if (posts == null) {
             return result;
         }
         for (Post post : posts) {
-            DetailPostDto detailPostDto = new DetailPostDto();
-            detailPostDto.setId(post.getId_post());
-            detailPostDto.setTitle(post.getTitle());
-            detailPostDto.setDescription(post.getDescription());
-            detailPostDto.setCreate_date(post.getCreate_date());
-            detailPostDto.setUser(userService.getUserById(post.getId_user()));
-            detailPostDto.setImages(imageService.findImageByTypeAndId(ImageType.POST_IMAGE.toString(), post.getId_post()));
-            detailPostDto.setLikeUsers(likeRecordService.getLikeUsersByPostId(post.getId_post()));
-            detailPostDto.setComments(commentService.getCommentsByPostId(post.getId_post()));
-            result.add(detailPostDto);
+            result.add(getDetailPost(post));
         }
         return result;
     }
 
-//    public Hashtable<String, Object> getPostByID(Long id_post) {
+    //    public Hashtable<String, Object> getPostByID(Long id_post) {
 //        Hashtable<String, Object> postList = new Hashtable<>();
 //        Hashtable<String, Object> userMap = new Hashtable<>();
 //        Object post = postRepository.getPostBy(id_post);
