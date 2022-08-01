@@ -8,13 +8,7 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
-
-    User findByEmail(String email);
-
-    @Query("SELECT u " +
-            "FROM User u " +
-            "WHERE function('dbo.ufn_removeMark', u.firstName) LIKE %:name% " +
-            "OR function('dbo.ufn_removeMark', u.lastName) LIKE %:name% " +
-            "OR u.username LIKE %:name%")
+    @Query("SELECT u FROM User u WHERE function('dbo.ufn_removeMark', u.firstName) LIKE %:name% OR function('dbo.ufn_removeMark', u.lastName) LIKE %:name%")
     List<User> searchByUsername(String name);
+
 }

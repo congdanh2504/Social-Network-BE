@@ -3,10 +3,11 @@ package com.example.social_network_fpt_be.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
-@Table(name = "user")
 @Data
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +40,14 @@ public class User {
 
     @Column(name = "description")
     private String description;
+
+    public User() {
+    }
+
+    public User(String email, String firstName) {
+        this.email = email;
+        this.firstName = firstName;
+    }
 
     @Override
     public int hashCode() {
