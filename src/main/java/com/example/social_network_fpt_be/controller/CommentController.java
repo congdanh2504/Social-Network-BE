@@ -1,8 +1,10 @@
 package com.example.social_network_fpt_be.controller;
 
+import com.example.social_network_fpt_be.models.Comment;
 import com.example.social_network_fpt_be.service.CommentService;
 import com.example.social_network_fpt_be.service.ImageService;
 import com.example.social_network_fpt_be.service.UserService;
+import com.example.social_network_fpt_be.service.dtos.CommentUploadDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.List;
@@ -34,25 +37,35 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(commentService.getCommentById(id_comment));
     }
 
-    @PostMapping(path = "")
-    public ResponseEntity<Object> createComment(@RequestPart("comment_image") MultipartFile comment_image,
-                                                @RequestParam("id_post") Long id_post,
-                                                Authentication authentication,
-                                                @RequestParam("id_comment_father") Long id_comment_father,
-                                                @RequestParam("comment") String comment) throws IOException {
-        Long id_user_comment = userService.getUserByUsername(authentication.getName()).getId();
-        if (comment_image.getContentType() != null) {
-            Hashtable<String, Object> checkImage = imageService.checkFile(comment_image);
-            if (checkImage.get("status").equals(0)){
-                if (checkImage.get("message").equals("Image file is empty")){
-
-                }else {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(checkImage.get("message"));
-                }
-            }
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.createComment(comment_image, id_post, id_user_comment, id_comment_father, comment));
+    @PostMapping("")
+    public ResponseEntity<Comment> createComment(@Valid @RequestBody CommentUploadDto commentUploadDto, Authentication authentication) {
+        return ResponseEntity.ok(commentService.createComment(commentUploadDto.getId_post(), commentUploadDto.getText(), authentication.getName()));
     }
+
+    @PostMapping("reply")
+    public ResponseEntity<Comment> replyComment(@Valid @RequestBody CommentUploadDto commentUploadDto, Authentication authentication) {
+        return ResponseEntity.ok(commentService.replyComment(commentUploadDto.getId_father_comment(), commentUploadDto.getText(), authentication.getName()));
+    }
+
+//    @PostMapping(path = "")
+//    public ResponseEntity<Object> createComment(@RequestPart("comment_image") MultipartFile comment_image,
+//                                                @RequestParam("id_post") Long id_post,
+//                                                Authentication authentication,
+//                                                @RequestParam("id_comment_father") Long id_comment_father,
+//                                                @RequestParam("comment") String comment) throws IOException {
+//        Long id_user_comment = userService.getUserByUsername(authentication.getName()).getId();
+//        if (comment_image.getContentType() != null) {
+//            Hashtable<String, Object> checkImage = imageService.checkFile(comment_image);
+//            if (checkImage.get("status").equals(0)){
+//                if (checkImage.get("message").equals("Image file is empty")){
+//
+//                }else {
+//                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(checkImage.get("message"));
+//                }
+//            }
+//        }
+//        return ResponseEntity.status(HttpStatus.OK).body(commentService.createComment(comment_image, id_post, id_user_comment, id_comment_father, comment));
+//    }
 
     @PutMapping(path = "{id_comment}")
     public ResponseEntity<Object> updateComment(@PathVariable("id_comment") Long id_comment,

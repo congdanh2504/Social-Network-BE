@@ -15,6 +15,6 @@ public class CommentDto {
     private Long id;
     private UserDto user;
     private List<CommentDto> children = new ArrayList<>();
-    private String comment;
+    private String text;
     private LocalDateTime create_date;
 }

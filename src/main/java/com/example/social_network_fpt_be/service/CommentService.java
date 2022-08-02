@@ -1,6 +1,7 @@
 package com.example.social_network_fpt_be.service;
 
 import com.example.social_network_fpt_be.models.Comment;
+import com.example.social_network_fpt_be.models.User;
 import com.example.social_network_fpt_be.repository.CommentRepository;
 import com.example.social_network_fpt_be.service.dtos.CommentDto;
 import com.example.social_network_fpt_be.util.ImageType;
@@ -129,6 +130,26 @@ public class CommentService {
 
     }
 
+    public Comment createComment(Long id_post, String text, String username) {
+        User user = userService.getUserByUsername(username);
+        Comment comment = new Comment();
+        comment.setId_post(id_post);
+        comment.setComment(text);
+        comment.setId_user_comment(user.getId());
+        comment.setCreate_date(LocalDateTime.now());
+        return commentRepository.save(comment);
+    }
+
+    public Comment replyComment(Long comment_father_id, String text, String username) {
+        User user = userService.getUserByUsername(username);
+        Comment comment = new Comment();
+        comment.setId_comment_father(comment_father_id);
+        comment.setComment(text);
+        comment.setId_user_comment(user.getId());
+        comment.setCreate_date(LocalDateTime.now());
+        return commentRepository.save(comment);
+    }
+
     public Hashtable<String, Object> createComment(MultipartFile comment_image, Long id_post, Long id_user_comment, Long id_comment_father,String comment) throws IOException {
         Comment cmt = new Comment();
         cmt.setId_post(id_post);
@@ -175,11 +196,12 @@ public class CommentService {
         List<CommentDto> result = new ArrayList<>();
         for (Comment comment: comments) {
             CommentDto commentDto = new CommentDto();
-            commentDto.setComment(comment.getComment());
+            commentDto.setText(comment.getComment());
             commentDto.setId(comment.getId_comment());
             commentDto.setUser(userService.getUserById(comment.getId_user_comment()));
             commentDto.setCreate_date(comment.getCreate_date());
             commentDto.setChildren(getChildrenComment(comment.getId_comment()));
+            result.add(commentDto);
         }
         return result;
     }
@@ -189,11 +211,12 @@ public class CommentService {
         List<CommentDto> result = new ArrayList<>();
         for (Comment comment: comments) {
             CommentDto commentDto = new CommentDto();
-            commentDto.setComment(comment.getComment());
+            commentDto.setText(comment.getComment());
             commentDto.setId(comment.getId_comment());
             commentDto.setUser(userService.getUserById(comment.getId_user_comment()));
             commentDto.setCreate_date(comment.getCreate_date());
-            commentDto.setChildren(getChildrenComment(comment.getId_user_comment()));
+            commentDto.setChildren(getChildrenComment(comment.getId_comment()));
+            result.add(commentDto);
         }
         return result;
     }

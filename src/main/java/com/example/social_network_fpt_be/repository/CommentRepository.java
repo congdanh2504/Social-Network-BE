@@ -10,8 +10,8 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    @Query("SELECT c FROM Comment c WHERE c.id_comment_father = ?1")
-    List<Comment> getCommentByFather(Long id);
+    @Query("SELECT c FROM Comment c WHERE c.id_comment_father = :id_father")
+    List<Comment> getCommentByFather(Long id_father);
 
     @Query("SELECT c FROM Comment c WHERE c.id_comment_father is null")
     List<Comment> getCommentRoot();
