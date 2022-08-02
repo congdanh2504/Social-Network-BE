@@ -1,6 +1,7 @@
 package com.example.social_network_fpt_be.service;
 
 import com.example.social_network_fpt_be.models.Post;
+import com.example.social_network_fpt_be.models.User;
 import com.example.social_network_fpt_be.repository.PostRepository;
 import com.example.social_network_fpt_be.service.dtos.DetailPostDto;
 import com.example.social_network_fpt_be.service.dtos.UploadPostDto;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -60,6 +62,12 @@ public class PostService {
     public DetailPostDto getPostById(Long post_id) {
         Post post = postRepository.getReferenceById(post_id);
         return getDetailPost(post);
+    }
+
+    public List<DetailPostDto> getFollowingPosts(String username) {
+        User user = userService.getUserByUsername(username);
+        List<Post> posts = postRepository.getFollowingPosts(user.getId());
+        return posts.stream().map((this::getDetailPost)).collect(Collectors.toList());
     }
 
     private DetailPostDto getDetailPost(Post post) {

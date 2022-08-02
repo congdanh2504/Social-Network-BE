@@ -31,12 +31,17 @@ public class PostController {
     }
 
     @GetMapping(path = "")
-    public ResponseEntity<List<DetailPostDto>>  getPostList() {
+    public ResponseEntity<List<DetailPostDto>> getPostList() {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPostList());
     }
 
+    @GetMapping(path = "following")
+    public ResponseEntity<List<DetailPostDto>> getFollowingPosts(Authentication authentication) {
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getFollowingPosts(authentication.getName()));
+    }
+
     @GetMapping(path = "/{post_id}")
-    public ResponseEntity<DetailPostDto>  getPostById(@PathVariable Long post_id) {
+    public ResponseEntity<DetailPostDto> getPostById(@PathVariable Long post_id) {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPostById(post_id));
     }
 
