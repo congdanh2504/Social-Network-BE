@@ -180,16 +180,15 @@ public class CommentService {
         return getCommentById(id_comment);
     }
 
-    public String deleteComment(Long id_comment){
-        try{
-            commentRepository.deleteById(id_comment);
-            imageService.deleteImageByTypeAndId("comment_image", id_comment);
-            return "success";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "fail";
-        }
+    public void deleteComment(Long id_comment){
+        Comment comment = commentRepository.getReferenceById(id_comment);
+        List<Comment> children = commentRepository.getCommentByFather(id_comment);
+        children.stream().forEach((cmt) -> {
+            deleteComment(cmt.getId_comment());
+        });
+        commentRepository.deleteById(id_comment);
     }
+
 
     public List<CommentDto> getCommentsByPostId(Long post_id) {
         List<Comment> comments = commentRepository.getRootCommentByPostId(post_id);
@@ -204,6 +203,10 @@ public class CommentService {
             result.add(commentDto);
         }
         return result;
+    }
+
+    public List<Comment> getRootCommentByPostId(Long post_id) {
+        return commentRepository.getRootCommentByPostId(post_id);
     }
 
     public List<CommentDto> getChildrenComment(Long id_father) {

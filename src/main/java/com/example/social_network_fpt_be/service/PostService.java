@@ -1,8 +1,10 @@
 package com.example.social_network_fpt_be.service;
 
+import com.example.social_network_fpt_be.models.Comment;
 import com.example.social_network_fpt_be.models.Post;
 import com.example.social_network_fpt_be.models.User;
 import com.example.social_network_fpt_be.repository.PostRepository;
+import com.example.social_network_fpt_be.service.dtos.CommentDto;
 import com.example.social_network_fpt_be.service.dtos.DetailPostDto;
 import com.example.social_network_fpt_be.service.dtos.UploadPostDto;
 import com.example.social_network_fpt_be.util.ImageType;
@@ -196,15 +198,12 @@ public class PostService {
 //
 //    }
 
-    public String deletePost(Long id_post) {
-        try {
-            postRepository.deleteById(id_post);
-            imageService.deleteImageByTypeAndId("post_image", id_post);
-            videoService.deleteVideo(id_post);
-            return "success";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "fail";
-        }
+    public void deletePost(Long id_post) {
+        List<Comment> comments = commentService.getRootCommentByPostId(id_post);
+        comments.forEach((cmt) -> {
+            commentService.deleteComment(cmt.getId_comment());
+        });
+        imageService.deleteImageByTypeAndId(ImageType.POST_IMAGE.toString(), id_post);
+        postRepository.deleteById(id_post);
     }
 }

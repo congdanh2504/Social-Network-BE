@@ -86,12 +86,8 @@ public class CommentController {
     }
 
     @DeleteMapping(path = "/{id_comment}")
-    public ResponseEntity<Object> deleteComment(@PathVariable("id_comment") Long id_comment) {
-        String result = commentService.deleteComment(id_comment);
-        if (result.equals("success")) {
-            return ResponseEntity.status(HttpStatus.OK).body("Delete post success");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Delete post fail");
-        }
+    public ResponseEntity<?> deleteComment(@PathVariable("id_comment") Long id_comment) {
+        commentService.deleteComment(id_comment);
+        return ResponseEntity.ok(true);
     }
 }

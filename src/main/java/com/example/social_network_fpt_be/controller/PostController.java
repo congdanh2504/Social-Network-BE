@@ -116,13 +116,9 @@ public class PostController {
 //    }
 
     @DeleteMapping(path = "{id_post}")
-    public ResponseEntity<Object> deletePost(@PathVariable Long id_post) {
-        String result = postService.deletePost(id_post);
-        if (result.equals("success")) {
-            return ResponseEntity.status(HttpStatus.OK).body("Delete post success");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Delete post fail");
-        }
+    public ResponseEntity<?> deletePost(@PathVariable Long id_post) {
+        postService.deletePost(id_post);
+        return ResponseEntity.ok(true);
     }
 
 }
