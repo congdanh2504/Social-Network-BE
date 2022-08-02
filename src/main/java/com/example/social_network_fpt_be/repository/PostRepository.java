@@ -36,6 +36,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "WHERE p.id_user = :user_id OR " +
             "p.id_user IN " +
             "(SELECT f.myKey.id_user_followed FROM Follow f " +
-            "WHERE f.myKey.id_user_follow = :user_id)")
+            "WHERE f.myKey.id_user_follow = :user_id) " +
+            "ORDER BY p.create_date desc ")
     List<Post> getFollowingPosts(Long user_id);
 }
