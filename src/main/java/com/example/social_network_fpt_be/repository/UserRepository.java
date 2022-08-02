@@ -11,6 +11,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByEmail(String email);
 
+    @Query("SELECT u " +
+            "FROM User u " +
+            "WHERE u.id <> :user_id AND u.id NOT IN " +
+            "(SELECT f.myKey.id_user_followed FROM Follow f " +
+            "WHERE f.myKey.id_user_follow = :user_id)")
+    List<User> getUnfollowUser(Long user_id);
+
     @Query("SELECT u FROM User u WHERE function('dbo.ufn_removeMark', u.firstName) LIKE %:name% OR function('dbo.ufn_removeMark', u.lastName) LIKE %:name%")
     List<User> searchByUsername(String name);
 

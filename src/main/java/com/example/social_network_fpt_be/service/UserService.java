@@ -176,6 +176,11 @@ public class UserService implements UserDetailsService {
         likeRecordService.unlikePost(post_id, user.getId());
     }
 
+    public List<UserDto> getUnFollowUsers(String username) {
+        User user = getUserByUsername(username);
+        return userRepository.getUnfollowUser(user.getId()).stream().map((UserDto::toUserDto)).collect(Collectors.toList());
+    }
+
     private String removeAccent(String s) {
         String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");

@@ -40,6 +40,11 @@ public class UserController {
         return ResponseEntity.ok().body(userService.searchByUsername(username));
     }
 
+    @GetMapping("unfollow-users")
+    public ResponseEntity<List<UserDto>> getUnFollowUsers(Authentication authentication) {
+        return ResponseEntity.ok(userService.getUnFollowUsers(authentication.getName()));
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok().body(userService.getUserById(id));
