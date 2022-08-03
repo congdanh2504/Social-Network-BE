@@ -178,11 +178,16 @@ public class UserService implements UserDetailsService {
 
     public List<UserDto> getUnFollowUsers(String username) {
         User user = getUserByUsername(username);
-        return userRepository.getUnfollowUser(user.getId()).stream().map((unFollowUser) -> {
+        List<UserDto> unFollowUsers = userRepository.getUnfollowUser(user.getId()).stream().map((unFollowUser) -> {
             UserDto userDto = UserDto.toUserDto(unFollowUser);
             userDto.setAvt(imageService.getAvatarByUser(userDto.getId()));
             return userDto;
         }).collect(Collectors.toList());
+        List<UserDto> top5unFollowUsers = new ArrayList<>();
+        for (int i=0; i<Math.min(unFollowUsers.size(), 5); ++i) {
+            top5unFollowUsers.add(unFollowUsers.get(i));
+        }
+        return top5unFollowUsers;
     }
 
     private String removeAccent(String s) {
