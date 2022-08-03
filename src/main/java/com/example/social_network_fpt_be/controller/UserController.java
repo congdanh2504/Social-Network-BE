@@ -57,7 +57,6 @@ public class UserController {
 
     @PostMapping(path = "/post")
     public ResponseEntity<Post> createPost(@Valid @RequestBody UploadPostDto postDto, Authentication authentication) throws IOException {
-        System.out.println(postDto.getImages());
         return ResponseEntity.ok().body(userService.createPost(postDto, authentication.getName()));
     }
 

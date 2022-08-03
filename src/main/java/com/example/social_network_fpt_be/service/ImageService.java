@@ -128,6 +128,10 @@ public class ImageService {
         }
     }
 
+    public void deleteByUrl(String url) {
+        imageRepository.deleteByUrl(url);
+    }
+
     public String getCoverImageByUser(Long userId) {
         try {
             Image image = imageRepository.getCoverImageByUser(userId);

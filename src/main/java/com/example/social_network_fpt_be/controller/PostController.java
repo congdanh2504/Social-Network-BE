@@ -1,7 +1,10 @@
 package com.example.social_network_fpt_be.controller;
 
+import com.example.social_network_fpt_be.models.Post;
 import com.example.social_network_fpt_be.service.*;
 import com.example.social_network_fpt_be.service.dtos.DetailPostDto;
+import com.example.social_network_fpt_be.service.dtos.EditPostDto;
+import com.example.social_network_fpt_be.service.dtos.UploadPostDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.List;
@@ -49,6 +53,13 @@ public class PostController {
 //    public ResponseEntity<Hashtable<String, Object>> getPostById(@PathVariable Long id_post) {
 //        return ResponseEntity.status(HttpStatus.OK).body(postService.getPostByID(id_post));
 //    }
+
+    @PutMapping(path = "/{post_id}")
+    public void createPost(@Valid @RequestBody EditPostDto postDto, @PathVariable Long post_id) throws IOException {
+//        System.out.println(postDto);
+//        System.out.println(post_id);
+        postService.editPost(postDto, post_id);
+    }
 
     @GetMapping(path = "five-latest-posts")
     public ResponseEntity<List<DetailPostDto>> getFiveLatestPosts() {

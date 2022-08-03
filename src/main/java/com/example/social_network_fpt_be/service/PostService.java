@@ -1,11 +1,13 @@
 package com.example.social_network_fpt_be.service;
 
 import com.example.social_network_fpt_be.models.Comment;
+import com.example.social_network_fpt_be.models.Image;
 import com.example.social_network_fpt_be.models.Post;
 import com.example.social_network_fpt_be.models.User;
 import com.example.social_network_fpt_be.repository.PostRepository;
 import com.example.social_network_fpt_be.service.dtos.CommentDto;
 import com.example.social_network_fpt_be.service.dtos.DetailPostDto;
+import com.example.social_network_fpt_be.service.dtos.EditPostDto;
 import com.example.social_network_fpt_be.service.dtos.UploadPostDto;
 import com.example.social_network_fpt_be.util.ImageType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,9 +140,27 @@ public class PostService {
         post.setCreate_date(LocalDateTime.now());
         postRepository.save(post);
         for (String url : postDto.getImages()) {
-            imageService.createWithURL(url, "post_image", post.getId_post());
+            imageService.createWithURL(url, ImageType.POST_IMAGE.toString(), post.getId_post());
         }
         return post;
+    }
+
+    public void editPost(EditPostDto postDto, Long id_post) {
+        Post post = postRepository.getReferenceById(id_post);
+        post.setTitle(postDto.getTitle());
+        post.setDescription(postDto.getDescription());
+        postRepository.save(post);
+        List<String> urlOldImage = imageService.findImageByTypeAndId(ImageType.POST_IMAGE.toString(), id_post).stream().map((Image::getUrl)).collect(Collectors.toList());
+
+        urlOldImage.forEach((img) -> {
+            if (!postDto.getOldImages().contains(img)) {
+                imageService.deleteByUrl(img);
+            }
+        });
+        for (String url : postDto.getNewImages()) {
+            imageService.createWithURL(url, ImageType.POST_IMAGE.toString(), id_post);
+        }
+//        return post;
     }
 
     public Post createPost(List<MultipartFile> post_image, Long id_user, String title, String description) throws IOException {

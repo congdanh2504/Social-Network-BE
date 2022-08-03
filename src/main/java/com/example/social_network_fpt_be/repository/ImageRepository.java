@@ -23,4 +23,6 @@ public interface ImageRepository extends JpaRepository<Image, Long>{
 
     @Query("SELECT i FROM Image i JOIN Post p ON p.id_post = i.id AND i.type = 'post_image' WHERE p.id_user = :userId")
     List<Image> getPostImageByUser(Long userId);
+
+    Long deleteByUrl(String url);
 }
