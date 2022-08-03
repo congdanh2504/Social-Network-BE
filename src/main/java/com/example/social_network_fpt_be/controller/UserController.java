@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,6 +59,12 @@ public class UserController {
     @PostMapping(path = "/post")
     public ResponseEntity<Post> createPost(@Valid @RequestBody UploadPostDto postDto, Authentication authentication) throws IOException {
         return ResponseEntity.ok().body(userService.createPost(postDto, authentication.getName()));
+    }
+
+    @PutMapping(path = "/change-avt", consumes = "multipart/form-data")
+    public ResponseEntity<?> changeAvt(@RequestPart("avt") MultipartFile avt, Authentication authentication) {
+        userService.changeAvt(avt, authentication.getName());
+        return ResponseEntity.ok(true);
     }
 
     @GetMapping("")

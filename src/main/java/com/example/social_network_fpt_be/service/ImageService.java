@@ -3,8 +3,10 @@ package com.example.social_network_fpt_be.service;
 
 import com.example.social_network_fpt_be.models.Image;
 import com.example.social_network_fpt_be.repository.ImageRepository;
+import com.example.social_network_fpt_be.util.ImageType;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.*;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -123,13 +125,30 @@ public class ImageService {
             Image image = imageRepository.getAvatarByUser(userId);
             return image.getUrl();
         } catch (Exception e) {
-            System.out.println("null");
             return "";
         }
     }
 
     public void deleteByUrl(String url) {
         imageRepository.deleteByUrl(url);
+    }
+
+    @SneakyThrows
+    public void changeAvt(MultipartFile avt, Long userId) {
+        String url = uploadImage(avt);
+        String oldUrl = getAvatarByUser(userId);
+        if (oldUrl.isEmpty()) {
+            Image image = new Image();
+            image.setId(userId);
+            image.setType(ImageType.USER_AVT.toString());
+            image.setCreate_date(LocalDateTime.now());
+            image.setUrl(url);
+            imageRepository.save(image);
+        } else {
+            Image image = imageRepository.getAvatarByUser(userId);
+            image.setUrl(url);
+            imageRepository.save(image);
+        }
     }
 
     public String getCoverImageByUser(Long userId) {

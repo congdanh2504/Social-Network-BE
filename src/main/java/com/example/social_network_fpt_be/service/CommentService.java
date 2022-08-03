@@ -183,12 +183,11 @@ public class CommentService {
     public void deleteComment(Long id_comment){
         Comment comment = commentRepository.getReferenceById(id_comment);
         List<Comment> children = commentRepository.getCommentByFather(id_comment);
-        children.stream().forEach((cmt) -> {
+        children.forEach((cmt) -> {
             deleteComment(cmt.getId_comment());
         });
         commentRepository.deleteById(id_comment);
     }
-
 
     public List<CommentDto> getCommentsByPostId(Long post_id) {
         List<Comment> comments = commentRepository.getRootCommentByPostId(post_id);
